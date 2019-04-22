@@ -3,13 +3,13 @@
 name = "Nelson Bighetti"
 
 # Username (this should match the folder name)
-authors = ["admin"]
+authors = ["YoungEon Kim, Whi Kwon"]
 
 # Is this the primary user of the site?
 superuser = true
 
 # Role/position
-role = "Professor of Artificial Intelligence"
+role = "Artificial Intelligence Scientest"
 
 # Organizations/Affiliations
 #   Separate multiple entries with a comma, using the form: `[ {name="Org1", url=""}, {name="Org2", url=""} ]`.
@@ -19,13 +19,13 @@ organizations = [ { name = "Stanford University", url = "" } ]
 bio = "My research interests include distributed robotics, mobile computing and programmable matter."
 
 # Enter email to display Gravatar (if Gravatar enabled in Config)
-email = ""
+email = "kye9216789@gmail.com"
 
 # List (academic) interests or hobbies
 interests = [
   "Artificial Intelligence",
-  "Computational Linguistics",
-  "Information Retrieval"
+  "Computer Vision",
+  "Deep Neural network"
 ]
 
 # Organizational groups that you belong to (for People widget)
