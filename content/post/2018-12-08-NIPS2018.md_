@@ -1,0 +1,29 @@
+---
+header: NIPS2018
+mathjax: True
+---
+저희 Medipixel은 이번 [NIPS 2018 - AI for Prosthetics Challenge](https://www.crowdai.org/challenges/nips-2018-ai-for-prosthetics-challenge)에 참여하여 401팀 중 17위라는 성적으로 마감하게 되었습니다. 
+competitoin을 진행하며 시행착오 끝에 많은 것들을 배울 수 있었는데요. 그간 여러 가지 리써치와 시도를 하며 얻었던 지식과 경험들을 본 post를 기점으로 몇 회에 걸쳐 정리하고자 합니다. 이번 Post에서는 우선 본격적인 내용 탐구에 앞서 이 대회는 어떤 대회였는지, 어떤 방식으로 접근을 하였는지에 대해 간단하게 정리하겠습니다.
+
+<!--break-->
+
+<figure>
+  <img src="/img/nips_final.PNG" width="80%" alt="">
+</figure>
+
+## AI for Prosthetics Challenge 
+AI for Prosthetics Challenge는 [NeurIPS 2018 Competition Track](https://nips.cc/Conferences/2018/CompetitionTrack)에 속한 공식 competition입니다. [Opensim](http://opensim.stanford.edu/) 시뮬레이터 환경에서 진행되었는데요, 오른쪽 다리에 의족을 착용한 사람(그래서 이 competition의 이름이 Prosthetics입니다.)의 근골격 모델을 강화학습 agent를 통해 제어하여 주어진 속도와 일치하게 전진시키는 것이 이번 competition의 주제였습니다. 
+
+
+## Works
+우선 생소한 환경을 분석해야 했습니다. Opensim 시뮬레이터 및 주어진 걷기/달리기 시퀀스 모두 저희 팀이 원래 하고 있던 업무와는 어느 정도 거리가 있던 일이었기 때문에, 환경과 task에 대한 분석에 많은 시간을 들였습니다. 
+
+그리고 일반적인 3d 모델을 이용한 강화학습 환경처럼 전진, 후진, 회전등의 동작을 직접 주는 것이 아닌, 각 근섬유 1개 1개를 모두 따로 제어해야 했기 때문에, 상당히 복잡한 환경이었습니다. 또한, 관측할 수 있는 값들도 수백 개 이상으로 마찬가지로 복잡했습니다. 그래서 당연히도 로컬머신만으로의 학습은 시간이 너무 오래 걸렸고, 필연적으로 분산처리를 이용한 강화학습 방법론을 사용할 수밖에 없었습니다. 또한, 학습속도를 높이기 위해 reward shaping, imitation learning 등의 방법을 사용하게 되었습니다. 
+
+강화학습 방법론은 competition 기간 내내 계속해서 탐색과 보완을 거듭하였습니다. 비슷한 환경에서 치러진 [NIPS2017 competition solution](http://osim-rl.stanford.edu/docs/nips2017/solutions/)을 참고하여 리써치를 시작하였는데, 이번 환경에서 적용되지 않는 부분도 많았고, 생각지도 못한 난관이 발생하여서 여러 가지 개선 끝에 안정화할 수 있었습니다.
+## Contents
+다음 내용으로 Posting을 진행할 예정입니다. 
+  - [Opensim]({{ site.url }}/NIPS2018-Opensim)
+  - [Imitation learning]({{ site.url }}/NIPS2018-Imitation_Learning)
+  - Distributed reinforcement learning
+  - Agent

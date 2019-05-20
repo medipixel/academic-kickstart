@@ -13,19 +13,19 @@
   url = "#posts"
   weight = 20
 
-#[[main]]
-#  name = "Projects"
-#  url = "#projects"
+[[main]]
+#  #name = "GitHub"
+#  url = "https://github.com/medipixel"
 #  weight = 30
 
-#[[main]]
-#  name = "Publications"
-#  url = "#featured"
+[[main]]
+#  name = "Site"
+#  url = "https://www.medipixel.io/"
 #  weight = 40
 
-#[[main]]
-#  name = "Tutorials"
-#  url = "/tutorial/"
+[[main]]
+#  name = "LinkedIn"
+#  url = "https://www.linkedin.com/company/medipixel?trk=d_public_post_mini-profile_title"
 #  weight = 50
 
 [[main]]
