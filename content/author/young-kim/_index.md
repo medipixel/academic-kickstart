@@ -16,7 +16,7 @@ role = "A.I Scientist"
 organizations = [ { name = "Medipixel", url = "https://www.medipixel.io/" } ]
 
 # Short bio (displayed in user profile at end of posts)
-bio = "My research interests include distributed robotics, mobile computing and programmable matter."
+#bio = "My research interests include distributed robotics, mobile computing and programmable matter."
 
 # Enter email to display Gravatar (if Gravatar enabled in Config)
 email = "kye9216789@gmail.com"
@@ -51,7 +51,7 @@ user_groups = ["Researchers", "Visitors"]
 [[social]]
   icon = "twitter"
   icon_pack = "fab"
-  link = "https://twitter.com/GeorgeCushen"
+  link = "https://twitter.com/kye9216789"
 
 #[[social]]
 #  icon = "google-scholar"
