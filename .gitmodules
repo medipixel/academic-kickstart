@@ -1,3 +1,11 @@
 [submodule "themes/academic"]
 	path = themes/academic
 	url = https://github.com/gcushen/hugo-academic.git
+[submodule "medipixel.github.io"]
+	path = medipixel.github.io
+	url = https://github.com/medipixel/medipixel.github.io.git
+	branch = master
+[submodule "public"]
+	path = public
+	url = https://github.com/medipixel/medipixel.github.io.git
+	branch = master
