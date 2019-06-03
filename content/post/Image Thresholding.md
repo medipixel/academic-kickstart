@@ -88,7 +88,7 @@ plt.title('Coins')
 plt.show()
 ```
 
-{{< figure library="1" src="2.3%20Image%20Thresholding_7_0.png" >}}
+{{< figure library="1" src="Image-Thresholding_7_0.png" >}}
 
 
 ---
@@ -136,7 +136,7 @@ plt.show()
 ```
 
 
-{{< figure library="1" src="2.3%20Image%20Thresholding_11_0.png" >}}
+{{< figure library="1" src="Image-Thresholding_11_0.png" >}}
 
 
 ---
@@ -179,7 +179,7 @@ plt.show()
 ```
 
 
-{{< figure library="1" src="2.3%20Image%20Thresholding_14_0.png" >}}
+{{< figure library="1" src="Image-Thresholding_14_0.png" >}}
 
 
 ---
@@ -243,7 +243,7 @@ plt.show()
 ```
 
 
-{{< figure library="1" src="2.3%20Image%20Thresholding_21_0.png" >}}
+{{< figure library="1" src="Image-Thresholding_21_0.png" >}}
 
 
 ---
@@ -287,7 +287,7 @@ plt.show()
 ```
 
 
-{{< figure library="1" src="2.3%20Image%20Thresholding_24_0.png" >}}
+{{< figure library="1" src="Image-Thresholding_24_0.png" >}}
 
 
 ---

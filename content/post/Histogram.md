@@ -78,7 +78,7 @@ plt.show()
 ```
 
 
-{{< figure library="1" src="2.2%20Histogram_7_0.png" >}}
+{{< figure library="1" src="Histogram_7_0.png" >}}
 
 ---
 
@@ -107,7 +107,7 @@ def plot_histogram_npy(img):
 plot_histogram_npy(img)
 ```
 
-{{< figure library="1" src="2.2%20Histogram_11_0.png" >}}
+{{< figure library="1" src="Histogram_11_0.png" >}}
 
 
 
@@ -131,7 +131,7 @@ def plot_histogram_cv(img):
 plot_histogram_cv(img)
 ```
 
-{{< figure library="1" src="2.2%20Histogram_15_0.png" >}}
+{{< figure library="1" src="Histogram_15_0.png" >}}
 
 
 * OpenCV를 이용하면 함수 호출을 통해 간단하게 Histogram을 구할 수 있습니다.
@@ -167,7 +167,7 @@ def show_stacked_histogram(img):
 show_stacked_histogram(img)
 ```
 
-{{< figure library="1" src="2.2%20Histogram_19_0.png" >}}
+{{< figure library="1" src="Histogram_19_0.png" >}}
 
 
 
@@ -187,7 +187,7 @@ equ = cv2.equalizeHist(img)
 show_stacked_histogram(equ)
 ```
 
-{{< figure library="1" src="2.2%20Histogram_21_0.png" >}}
+{{< figure library="1" src="Histogram_21_0.png" >}}
 
 
 
@@ -211,7 +211,7 @@ plt.title('Equalized Lena')
 plt.show()
 ```
 
-{{< figure library="1" src="2.2%20Histogram_23_0.png" >}}
+{{< figure library="1" src="Histogram_23_0.png" >}}
 
 
 
