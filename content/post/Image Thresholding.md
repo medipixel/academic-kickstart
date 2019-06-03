@@ -1,5 +1,5 @@
 +++
-title = "2.3. Image Thresholding"
+title = "Image Thresholding"
 summary = "Image threshold using OpenCV"
 date = 2019-05-01T22:22:17+09:00
 draft = false
@@ -19,8 +19,18 @@ categories = []
   # Options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
   focal_point = ""
 +++
+# Image Thresholding
+- [Introduction](#Introduction)
+- [Binarization](#Binarization)
+- [Otsu Algorithm](#Otsu&nbsp;Algorithm)
+- [Blob labeling](#Blob&nbsp;labeling)
 
 ---
+## Introduction
+* OpenCV와 python으로 Image processing을 알아봅시다.
+* 이 글에서는 Image thresholding을 간단히 알아보고, 어떻게 응용되는지 Blob labeling예제를 통해 확인하겠습니다.
+___
+
 ## Import Libraries
 
 
@@ -36,14 +46,14 @@ import matplotlib
 import numpy as np
 
 print("Python version : ", python_version())
-print("Opencv version : ", cv2.__version__)
+print("OpenCV version : ", cv2.__version__)
 matplotlib.rcParams['figure.figsize'] = (4.0, 4.0)
 ```
 
     Python version :  3.6.7
-    Opencv version :  3.4.5
+    OpenCV version :  3.4.5
 
----
+
 ## Data load
 
 
@@ -60,7 +70,7 @@ ret, coin = cv2.threshold(coin_img, 240, 255, cv2.THRESH_BINARY_INV)
 coin = cv2.dilate(coin, mask, iterations=1)
 coin = cv2.erode(coin, mask, iterations=6)
 ```
----
+
 ## Data description
 * 본 예제에서 사용할 데이터는 아래와 같습니다.
     * Lena : 지난 예제에서 사용한 Lena 입니다.
@@ -78,8 +88,8 @@ plt.title('Coins')
 plt.show()
 ```
 
+{{< figure library="1" src="2.3%20Image%20Thresholding_7_0.png" >}}
 
-{{< figure library="1" src="2.3%20Image%20Thresholding_6_0.png" >}}
 
 ---
 
@@ -126,12 +136,13 @@ plt.show()
 ```
 
 
-{{< figure library="1" src="2.3%20Image%20Thresholding_10_0.png" >}}
+{{< figure library="1" src="2.3%20Image%20Thresholding_11_0.png" >}}
+
 
 ---
 
 * 위에서 numpy를 이용했다면, 이번엔 OpenCV 내장 함수를 이용하여 image threshold를 해보겠습니다.
-* OpenCV 함수로는 보다 편리하게 다양한 결과물을 만들어낼 수 있습니다.
+* OpenCV 함수를 이용하면 numpy로 작성하는 것 보다 편리하게 다양한 결과물을 만들어낼 수 있습니다.
     * *cv2.threshold()* 함수에 전달하는 인자를 통해 threshold 알고리즘을 다양하게 변경할 수 있습니다.
 
 
@@ -167,8 +178,8 @@ plt.suptitle('Lena with different threshold algorithm(OpenCV)', size=15)
 plt.show()
 ```
 
-{{< figure library="1" src="2.3%20Image%20Thresholding_13_0.png" >}}
 
+{{< figure library="1" src="2.3%20Image%20Thresholding_14_0.png" >}}
 
 
 ---
@@ -195,7 +206,7 @@ $
 * $v\_{0}(t), v\_{1}(t)$은 두 영역의 분산을 뜻합니다.
 
 * 위 수식을 그대로 적용하면 시간복잡도가 $\Theta(L^{2})$이므로 실제로 사용하기 매우 어려워집니다.
-* 그러나, $\mu와 v$가 영상에 대해 한번만 계산하고 나면 상수처럼 취급된다는 사실에 착안하여 다음 알고리즘이 완성되었습니다.
+* 그러나, $\mu$와 $v$가 영상에 대해 한번만 계산하고 나면 상수처럼 취급된다는 사실에 착안하여 다음 알고리즘이 완성되었습니다.
 
 $
 T = argmax\_{t\subseteq\{0,1,\cdots,L-1\}}v\_{between}(t)\\\\\\
@@ -232,7 +243,8 @@ plt.show()
 ```
 
 
-{{< figure library="1" src="2.3%20Image%20Thresholding_20_0.png" >}}
+{{< figure library="1" src="2.3%20Image%20Thresholding_21_0.png" >}}
+
 
 ---
 ## Blob&nbsp;labeling
@@ -242,11 +254,11 @@ plt.show()
       1로 정해진 픽셀끼리 하나의 object라고 생각할 수 있을것이고, 우리는 이 object를 묶어서 사용하고 싶게 될 것입니다.
 
 
-* 서로 다른 object인지를 판단하기 위하여 **픽셀의 연결성** [[2]](#ref_2) 을 고려한 알고리즘을 수행하고 각기 다른 label을 할당하는데, 이를 __blob labeling__이라 합니다.
+* 서로 다른 object인지를 판단하기 위하여 **픽셀의 연결성** [[2]](https://en.wikipedia.org/wiki/Pixel_connectivity) 을 고려한 알고리즘을 수행하고 각기 다른 label을 할당하는데, 이를 __blob labeling__이라 합니다.
 
 
 * __Blob labeling__을 하면 개별 object에 대해 각각 접근하여 우리가 하고싶은 다양한 영상처리를 개별적으로 적용할 수 있게 되니, 활용도가 아주 높은 기능입니다.
-    * 본 예제에서는 blob labeling에 대한 개념적인 소개와 OpenCV에 구현된 함수의 간단한 사용법만을 확인하겠습니다. [[3]](#ref_3)
+    * 본 예제에서는 blob labeling에 대한 개념적인 소개와 OpenCV에 구현된 함수의 간단한 사용법만을 확인하겠습니다. [[3]](https://www.learnopencv.com/blob-detection-using-opencv-python-c/)
     * 직관적으로 원의 형상을 띄는 위치에 하나의 blob을 의미하는 파랑색 동그라미를 생성하는 모습입니다.
     * 잘못된 위치에 그려진 blob이 눈에 띄는데요, 이와 같은 결과를 parameter를 통해 handling하는 내용에 대해서 차후 다가올 주제인 Image Segmentation에서 확인하겠습니다.
 
@@ -255,8 +267,8 @@ plt.show()
 ret, coin_img = cv2.threshold(coin, 200, 255, cv2.THRESH_BINARY_INV)
 
 params = cv2.SimpleBlobDetector_Params()
-params.minThreshold = 10;
-params.maxThreshold = 255;
+params.minThreshold = 10
+params.maxThreshold = 255
 params.filterByArea = False
 params.filterByCircularity = False
 params.filterByConvexity = False
@@ -274,12 +286,18 @@ plt.title('Coin keypoint', size=15)
 plt.show()
 ```
 
-{{< figure library="1" src="2.3%20Image%20Thresholding_23_0.png" >}}
+
+{{< figure library="1" src="2.3%20Image%20Thresholding_24_0.png" >}}
+
 
 ---
+## Conclusion
+* Image thresholding의 사용법과 다양한 응용방법, threshold 값을 선택해주는 Otsu 알고리즘을 알아보았습니다.
+* 마지막에 알아본 Blob labeling은 Image processing 분야 전반에 걸쳐 사용되는 곳이 아주 많으니 추후에 더 깊이 알아보는 시간을 갖겠습니다.
+
+---
+
 ### Reference
 * [1] 오일석, 컴퓨터 비전, 2014, pp. 67-75
-<a id="ref_2"></a>
 * [2] 'Pixel connectivity', Wikipedia. 2019 [Online]. Available: https://en.wikipedia.org/wiki/Pixel_connectivity
-<a id="ref_3"></a>
 * [3] Satya Mallick., 'Blob Detection Using OpenCV ( Python, C++ )', 'Learn OpenCV. 2019 [Online]. Available: https://www.learnopencv.com/blob-detection-using-opencv-python-c/
