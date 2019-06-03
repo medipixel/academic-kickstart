@@ -29,6 +29,7 @@ categories = []
 ## Introduction
 * OpenCV와 python으로 Image processing을 알아봅시다.
 * 이 글에서는 Image thresholding을 간단히 알아보고, 어떻게 응용되는지 Blob labeling예제를 통해 확인하겠습니다.
+
 ___
 
 ## Import Libraries
