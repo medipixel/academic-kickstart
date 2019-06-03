@@ -22,7 +22,7 @@ categories = []
 
 ---
 ## Introduction
-* OpenCV와 python으로 Image processing을 알아봅시다.
+* OpenCV와 Python으로 Image processing을 알아봅시다.
 * 이 글에서는 Image thresholding을 간단히 알아보고, 어떻게 응용되는지 Blob labeling예제를 통해 확인하겠습니다.
 
 ___
@@ -139,7 +139,7 @@ plt.show()
 
 * 위에서 numpy를 이용했다면, 이번엔 OpenCV 내장 함수를 이용하여 image threshold를 해보겠습니다.
 * OpenCV 함수를 이용하면 numpy로 작성하는 것 보다 편리하게 다양한 결과물을 만들어낼 수 있습니다.
-    * *cv2.threshold()* 함수에 전달하는 인자를 통해 threshold 알고리즘을 다양하게 변경할 수 있습니다.
+    * `cv2.threshold()` 함수에 전달하는 인자를 통해 threshold 알고리즘을 다양하게 변경할 수 있습니다.
 
 
 ```python
@@ -183,43 +183,43 @@ plt.show()
 ## Otsu&nbsp;Algorithm
 * Otsu algorithm(오츄 알고리즘)은 특정 threshold값을 기준으로 영상을 둘로 나눴을때, 두 영역의 명암 분포를 가장 균일하게 할 때 결과가 가장 좋을 것이다는 가정 하에 만들어진 알고리즘입니다.
     * 여기서 균일함 이란, 두 영역 각각의 픽셀값의 분산을 의미하며, 그 차이가 가장 적게 하는 threshold 값이 오츄 알고리즘이 찾고자 하는 값입니다.
-* 위에 기술한 목적에 따라, 알고리즘에서는 특정 Threshold T를 기준으로 영상을 분할하였을 때, 양쪽 영상의 분산의 weighted sum이 가장 작게 하는 T값을 반복적으로 계산해가며 찾습니다.
+* 위에 기술한 목적에 따라, 알고리즘에서는 특정 Threshold $T$를 기준으로 영상을 분할하였을 때, 양쪽 영상의 분산의 weighted sum이 가장 작게 하는 $T$값을 반복적으로 계산해가며 찾습니다.
     * weight는 각 영역의 넓이로 정합니다.
-    * 어떤 연산을 어떻게 반복하는지에 대한 내용이 아래 수식에 자세히 나와있습니다.
-
-$T = argmin\_{t\subseteq \{1,\cdots,L-1\}} v\_{within}(t)
-\\\\\\
-v\_{within}(t) = w\_{0}(t)v\_{0}(t) + w\_{1}(t)v\_{1}(t)
-\\\\\\
+    * 어떤 연산을 어떻게 반복하는지에 대한 내용이 아래 수식에 자세히 나와있습니다. <br>
+$$
 \begin{align}
+& T = argmin\_{t\subseteq \{1,\cdots,L-1\}} v\_{within}(t)
+\\\\\\
+& v\_{within}(t) = w\_{0}(t)v\_{0}(t) + w\_{1}(t)v\_{1}(t)
+\\\\\\
+\\\\\\
 & w\_{0}(t) = \Sigma\_{i=0}^{t} \hat h(i),\hspace{2cm} && w\_{1}(t) = \Sigma\_{i=t+1}^{L-1} \hat h(i)\\\\\\
 & \mu\_{0}(t)=\frac{1}{w\_{0}(t)}\Sigma_{i=0}^{t}i\hat h(i) && \mu\_{1}(t)=\frac{1}{w\_{1}(t)}\Sigma\_{i=t+1}^{L-1}i\hat h(i)\\\\\\
 & v\_{0}(t) = \frac{1}{w\_{0}(t)}\Sigma\_{i=0}^{t}i\hat h(i)(i-\mu\_{0}(t))^2 && v\_{1}(t) = \frac{1}{w\_{1}(t)}\Sigma\_{i=t+1}^{L-1}i\hat h(i)(i-\mu\_{1}(t))^2\\\\\\
 \end{align}
-$
+$$
 
 * $w\_{0}(t), w\_{1}(t)$는 threshold 값으로 결정된 흑색 영역과 백색 영역의 크기를 각각 나타냅니다.
 * $v\_{0}(t), v\_{1}(t)$은 두 영역의 분산을 뜻합니다.
 
 * 위 수식을 그대로 적용하면 시간복잡도가 $\Theta(L^{2})$이므로 실제로 사용하기 매우 어려워집니다.
-* 그러나, $\mu$와 $v$가 영상에 대해 한번만 계산하고 나면 상수처럼 취급된다는 사실에 착안하여 다음 알고리즘이 완성되었습니다.
-
-$
-T = argmax\_{t\subseteq\{0,1,\cdots,L-1\}}v\_{between}(t)\\\\\\
-v\_{between}(t)=w\_{0}(t)(1-w\_{0}(t))(\mu\_{0}(t)-\mu\_{1}(t))^2\\\\\\
-\mu = \Sigma\_{i=0}^{L-1}i\hat h(i)\\\\\\
-초깃값(t=0):w\_{0}(0)=\hat h(0), \mu\_{0}(0)=0\\\\\\
-순환식(t>0):\\\\\\
+* 그러나, $\mu$와 $v$가 영상에 대해 한번만 계산하고 나면 상수처럼 취급된다는 사실에 착안하여 다음 알고리즘이 완성되었습니다. <br>
+$$
 \begin{align}
-\hspace{1cm}& w\_{0}(t)=w\_{0}(t-1)+\hat h(t)\\\\\\
-& \mu\_{0}(t)=\frac{w\_{0}(t-1)\mu\_{0}(t-1)+t\hat h(t)}{w\_{0}(t)}\\\\\\
-& \mu\_{1}(t)=\frac{\mu-w_{0}(t)\mu\_{0}(t)}{1-w\_{0}(t)}\\\\\\
+&T = argmax\_{t\subseteq\{0,1,\cdots,L-1\}}v\_{between}(t)\\\\\\
+&v\_{between}(t)=w\_{0}(t)(1-w\_{0}(t))(\mu\_{0}(t)-\mu\_{1}(t))^2\\\\\\
+&\mu = \Sigma\_{i=0}^{L-1}i\hat h(i)\\\\\\
+\\\\\\
+&\text{초깃값}(t=0):w\_{0}(0)=\hat h(0),\ \mu\_{0}(0)=0\\\\\\
+&\text{순환식}(t>0):\\\\\\
+& \hspace{1cm} w\_{0}(t)=w\_{0}(t-1)+\hat h(t)\\\\\\
+& \hspace{1cm} \mu\_{0}(t)=\frac{w\_{0}(t-1)\mu\_{0}(t-1)+t\hat h(t)}{w\_{0}(t)}\\\\\\
+& \hspace{1cm} \mu\_{1}(t)=\frac{\mu-w_{0}(t)\mu\_{0}(t)}{1-w\_{0}(t)}\\\\\\
 \end{align}
-$
+$$
 
-
-* 위 순환식을 t에 대하여 수행하여 가장 큰$v_{between}$를 갖도록 하는 $t$를 최종 threshold T로 사용합니다.
-* 이와 같은 알고리즘이 OpenCV의 threshold함수에 구현되어있으며, *'cv2.THRESH_OTSU'* 파라미터를 사용하면 적용됩니다.아래와 같이 사용하면 됩니다.
+* 위 순환식을 $t$에 대하여 수행하여 가장 큰$v_{between}$를 갖도록 하는 $t$를 최종 threshold $T$로 사용합니다.
+* 이와 같은 알고리즘이 OpenCV의 threshold함수에 구현되어있으며, `cv2.THRESH_OTSU` 파라미터를 아래 코드와 같이 사용하면 적용이 됩니다.
 
 
 ```python
@@ -245,16 +245,16 @@ plt.show()
 ---
 ## Blob&nbsp;labeling
 
-* Threshold를 통해 할 수 있는 일은 그야말로 무궁무진한데, 그 중 하나로 이미지 분할(image segmentation)을 들 수 있습니다.
+* Threshold를 통해 할 수 있는 일은 그야말로 무궁무진한데, 그 중 하나로 이미지 분할(image segmentation)을 예시로 들 수 있습니다.
     * 만일 threshold 등의 알고리즘을 이용하여 특정 목적에 따라 영상을 분할할 수 있다면(e.g. 사람 손 or 도로의 차선)
       1로 정해진 픽셀끼리 하나의 object라고 생각할 수 있을것이고, 우리는 이 object를 묶어서 사용하고 싶게 될 것입니다.
 
 
-* 서로 다른 object인지를 판단하기 위하여 **픽셀의 연결성** [[2]](https://en.wikipedia.org/wiki/Pixel_connectivity) 을 고려한 알고리즘을 수행하고 각기 다른 label을 할당하는데, 이를 __blob labeling__이라 합니다.
+* 서로 다른 object인지를 판단하기 위하여 **픽셀의 연결성** [[2]](https://en.wikipedia.org/wiki/Pixel_connectivity) 을 고려한 알고리즘을 수행하고 각기 다른 label을 할당하는데, 이를 __Blob labeling__이라 합니다.
 
 
 * __Blob labeling__을 하면 개별 object에 대해 각각 접근하여 우리가 하고싶은 다양한 영상처리를 개별적으로 적용할 수 있게 되니, 활용도가 아주 높은 기능입니다.
-    * 본 예제에서는 blob labeling에 대한 개념적인 소개와 OpenCV에 구현된 함수의 간단한 사용법만을 확인하겠습니다. [[3]](https://www.learnopencv.com/blob-detection-using-opencv-python-c/)
+    * 본 예제에서는 blob labeling에 대한 개념적인 소개와 OpenCV에 구현된 함수의 간단한 사용법을 확인하겠습니다. [[3]](https://www.learnopencv.com/blob-detection-using-opencv-python-c/)
     * 직관적으로 원의 형상을 띄는 위치에 하나의 blob을 의미하는 파랑색 동그라미를 생성하는 모습입니다.
     * 잘못된 위치에 그려진 blob이 눈에 띄는데요, 이와 같은 결과를 parameter를 통해 handling하는 내용에 대해서 차후 다가올 주제인 Image Segmentation에서 확인하겠습니다.
 
