@@ -19,10 +19,6 @@ categories = []
   # Options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
   focal_point = ""
 +++
-# Histogram
-- [Introduction](#Introduction)
-- [Histogram](#Histogram)
-- [Histogram Equalization](#Histogram&nbsp;Equalization)
 
 ---
 ## Introduction

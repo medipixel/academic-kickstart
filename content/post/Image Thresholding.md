@@ -19,11 +19,6 @@ categories = []
   # Options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
   focal_point = ""
 +++
-# Image Thresholding
-- [Introduction](#Introduction)
-- [Binarization](#Binarization)
-- [Otsu Algorithm](#Otsu&nbsp;Algorithm)
-- [Blob labeling](#Blob&nbsp;labeling)
 
 ---
 ## Introduction
