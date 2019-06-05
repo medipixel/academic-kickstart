@@ -132,8 +132,9 @@ plot_histogram_cv(img)
 
 * OpenCV를 이용하면 함수 호출을 통해 간단하게 Histogram을 구할 수 있습니다.
 * numpy로 구한 Histogram과 비교해 보면, 두 결과물이 완전히 동일한 것을 알 수 있습니다.
-* *'cv2.calcHist()'*를 수행하면 픽셀값 별 등장 횟수의 그래프를 얻고, 이를 normalize하여 최종적으로 Histogram을 얻게 됩니다.
-* *'cv2.calcHist()'*의 자세한 사용법은 OpenCV 공식 tutorial page를 통해 확인할 수 있습니다. [[2]](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_histograms/py_histogram_begins/py_histogram_begins.html#histogram-calculation-in-opencv)
+* *'cv2.calcHist()'* 를 수행하면 픽셀값 별 등장 횟수의 그래프를 얻고, 이를 normalize하여 최종적으로 Histogram을 얻게 됩니다.
+* *'cv2.calcHist()'* 의 자세한 사용법은 OpenCV 공식 tutorial page를 통해 확인할 수 있습니다. [[2]](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_histograms/py_histogram_begins/py_histogram_begins.html#histogram-calculation-in-opencv)
+
 ---
 
 ## Histogram&nbsp;Equalization
