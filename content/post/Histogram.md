@@ -1,5 +1,5 @@
 +++
-title = "2.2 Histogram"
+title = "Histogram"
 summary = "Histogram using OpenCV"
 date = 2019-05-01T22:22:17+09:00
 draft = false
@@ -21,6 +21,13 @@ categories = []
 +++
 
 ---
+## Introduction
+
+* OpenCV와 python으로 Image processing을 알아봅시다.
+* 이 글은 첫 번째 posting으로, Image processing에서 Histogram이란 무엇인지에 대하여 알아보겠습니다.
+
+---
+
 ## Import Libraries
 
 
@@ -37,14 +44,14 @@ import numpy as np
 
 
 print("Python version : ", python_version())
-print("Opencv version : ", cv2.__version__)
+print("OpenCV version : ", cv2.__version__)
 matplotlib.rcParams['figure.figsize'] = (4.0, 4.0)
 ```
 
     Python version :  3.6.6
-    Opencv version :  3.4.3
+    OpenCV version :  3.4.3
 
----
+
 ## Data load
 
 
@@ -53,7 +60,7 @@ sample_image_path = '../image/'
 sample_image = 'lena_gray.jpg'
 img = cv2.imread(sample_image_path + sample_image, cv2.IMREAD_GRAYSCALE)
 ```
----
+
 ## Data description
 * 본 예제에서 사용할 데이터는 아래와 같습니다.
     * 거의 대부분의 OpenCV 예제에서 볼 수 있는 Lena 입니다.
@@ -66,9 +73,8 @@ plt.title('Lena')
 plt.show()
 ```
 
-{{< figure library="1" src="2.2%20Histogram_6_0.png" >}}
 
-
+{{< figure library="1" src="Histogram_7_0.png" >}}
 
 ---
 
@@ -97,7 +103,8 @@ def plot_histogram_npy(img):
 plot_histogram_npy(img)
 ```
 
-{{< figure library="1" src="2.2%20Histogram_10_0.png" >}}
+{{< figure library="1" src="Histogram_11_0.png" >}}
+
 
 
 * OpenCV등을 이용하지 않고 numpy만을 이용하여 구한 Lena의 Histogram 입니다.
@@ -112,7 +119,7 @@ def plot_histogram_cv(img):
     hist = cv2.calcHist([img], [0], None, [256], [0, 256])
     hist_norm = hist / (w * h)  # normalize
     plt.plot(hist_norm)
-    plt.title('Histogram of Lena, Opencv', size=15)
+    plt.title('Histogram of Lena, OpenCV', size=15)
 ```
 
 
@@ -120,13 +127,14 @@ def plot_histogram_cv(img):
 plot_histogram_cv(img)
 ```
 
-{{< figure library="1" src="2.2%20Histogram_14_0.png" >}}
+{{< figure library="1" src="Histogram_15_0.png" >}}
 
 
 * OpenCV를 이용하면 함수 호출을 통해 간단하게 Histogram을 구할 수 있습니다.
 * numpy로 구한 Histogram과 비교해 보면, 두 결과물이 완전히 동일한 것을 알 수 있습니다.
-* **'cv2.calcHist()'**를 수행하면 픽셀값 별 등장 횟수의 그래프를 얻고, 이를 normalize하여 최종적으로 Histogram을 얻게 됩니다.
-* **'cv2.calcHist()'**의 자세한 사용법은 Opencv 공식 tutorial page를 통해 확인할 수 있습니다. [[2]](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_histograms/py_histogram_begins/py_histogram_begins.html#histogram-calculation-in-opencv)
+* *'cv2.calcHist()'* 를 수행하면 픽셀값 별 등장 횟수의 그래프를 얻고, 이를 normalize하여 최종적으로 Histogram을 얻게 됩니다.
+* *'cv2.calcHist()'* 의 자세한 사용법은 OpenCV 공식 tutorial page를 통해 확인할 수 있습니다. [[2]](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_histograms/py_histogram_begins/py_histogram_begins.html#histogram-calculation-in-opencv)
+
 ---
 
 ## Histogram&nbsp;Equalization
@@ -156,7 +164,8 @@ def show_stacked_histogram(img):
 show_stacked_histogram(img)
 ```
 
-{{< figure library="1" src="2.2%20Histogram_18_0.png" >}}
+{{< figure library="1" src="Histogram_19_0.png" >}}
+
 
 
 * 0부터 255까지의 Histogram의 누적치 입니다. 쉽게 말하면 Histogram을 적분한 것이라고 할 수 있습니다.
@@ -175,16 +184,13 @@ equ = cv2.equalizeHist(img)
 show_stacked_histogram(equ)
 ```
 
-{{< figure library="1" src="2.2%20Histogram_20_0.png" >}}
+{{< figure library="1" src="Histogram_21_0.png" >}}
+
 
 
 * OpenCV에 구현되어있는 cv2.equalizeHist()함수를 통해 평활화한 Lena의 Histogram입니다.
 * 이제 Histogram 누적치가 직선 형태라는 말이 확실하게 이해 되실 것 같습니다.
-
-
 ---
-
-
 * 마지막으로 이렇게 변화시킨 이미지가 원본 이미지와 어떻게 다른지 확인해 보겠습니다.
 
 
@@ -202,7 +208,8 @@ plt.title('Equalized Lena')
 plt.show()
 ```
 
-{{< figure library="1" src="2.2%20Histogram_22_0.png" >}}
+{{< figure library="1" src="Histogram_23_0.png" >}}
+
 
 
 * 전체적인 톤의 변화를 확인할 수 있는데, 밝은 부분은 더 밝아지고 어두운 부분은 더 어두워지는 모습을 볼 수 있습니다.
@@ -211,6 +218,13 @@ plt.show()
 * 히스토그램 평활화에 대한 자세한 내용은 마찬가지로 OpenCV 공식 tutorial page를 통해 확인할 수 있습니다. [[3]](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_histograms/py_histogram_equalization/py_histogram_equalization.html#histogram-equalization)
 
 ********
+
+## Conclusion
+
+* 이미지 분석의 기초인 히스토그램에 대하여 알아보았습니다.
+* 또한 이미지 처리 기법중 하나인 히스토그램 평활화를 알아보았으며, 실질적으로 히스토그램에 어떤 변화를 주는지 확인할 수 있었습니다.
+
+---
 
 ## Reference
 - [1] 오일석, 컴퓨터 비전, 2014, pp. 58-63
