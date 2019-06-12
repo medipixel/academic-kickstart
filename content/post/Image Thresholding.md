@@ -1,7 +1,7 @@
 +++
 title = "Image Thresholding"
 summary = "Image threshold using OpenCV"
-date = 2019-05-01T22:22:17+09:00
+date = 2019-06-07T12:00:00+09:00
 draft = false
 authors=["young-kim", "whi-kwon"]
 # Tags and categories
