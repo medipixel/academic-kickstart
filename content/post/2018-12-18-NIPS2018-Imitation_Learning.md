@@ -1,7 +1,25 @@
----
-header: NIPS2018 - Imitation Learning
-mathjax: True
----
++++
+title = "NIPS2018 - Imitation Learning"
+summary = "Imitation Learning"
+date = 2018-12-18T22:22:17+09:00
+draft = false
+authors=["hyungkyu-kim"]
+# Tags and categories
+# For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
+tags = []
+categories = []
+
+# Featured image
+# To use, add an image named `featured.jpg/png` to your page's folder.
+[image]
+  # Caption (optional)
+  caption = ""
+
+  # Focal point (optional)
+  # Options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
+  focal_point = ""
+  
++++
 
 이번 posting에서는 competition에 적용하였던 reward shaping 방법론과 imitation learning 방법론을 기본으로 
 reward, penalty를 바꿔가며 했던 여러 가지 실험 결과에 관해 이야기해보겠습니다.
@@ -11,19 +29,21 @@ reward, penalty를 바꿔가며 했던 여러 가지 실험 결과에 관해 이
 # Reward shaping
 Google deep mind에서 2015년 발표한 [Human-level control through deep reinforcement](https://www.nature.com/articles/nature14236/)를 보면 다양한 atari game environment에서 DQN의 성능을 볼 수 있습니다. montezuma's revenge 같은 경우 거의 바닥에 수렴(randome play와 같은 수준)하는 결과치를 볼 수 있는데요. 이 게임은 stage를 클리어하기 위해 주인공 캐릭터가 거쳐야 하는 단계가 너무 복잡하고 많습니다. 이것을 강화학습 관점에서 이야기하면 reward가 너무 sparse 하여 강화학습 agent가 어떻게 상황을 헤쳐나갈 지에 대해 갈피를 잡지 못한다고 할 수 있습니다.
 <figure>
-  <img src="https://raw.githubusercontent.com/medipixel/medipixel.github.io/master/img/imitation/reward_deepmind_dqn_chart.png" width="80%" alt="">
+  <img src="/img/imitation/reward_deepmind_dqn_chart.png" width="80%" alt="">
   <figcaption>Comparison of the DQN agent with the best reinforcement
 learning methods15 in the literature.<br>from <a href="https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf/">Human-level control through deep reinforcement , V Mnih et al. 2015</a>
   </figcaption>
 </figure>
 
 그렇다면 어떻게 sparse 한 reward를 dense 하게 만들 수 있을까요? 크게 2가지 해결책이 있을 수 있습니다.
-  * manually design: 수작업으로 직접 reward function을 만듦 
-  * learn from demonstration: 전문가의 demonstration trajectory를 모방하게 함
+
+* manually design: 수작업으로 직접 reward function을 만듦 
+* learn from demonstration: 전문가의 demonstration trajectory를 모방하게 함
 
 이번 competition에서도 위와 비슷한 문제가 있었습니다. 각 time step 별로 따라가야 할 속도는 나와 있었지만 나머지 정보는 전혀 없는 상태였죠. 특히 자세같은 경우는 상당히 중요한데, 현재의 자세가 다음 자세에 영향을 미치기 때문입니다. 이러한 연속적인 자세의 모음으로 원하는 속도가 제대로 나느냐 안 나느냐가 판가름 나기 때문에, 자세에 대한 상벌은 굉장히 중요한 요소였습니다. 우선 manually design 한 방식으로 접근하기 시작했습니다.
 
-처음에는 아주 간단한 reward와 penalty부터 출발하였습니다. [NIPS2017 competition solution](http://osim-rl.stanford.edu/docs/nips2017/solutions/)에 공개된 후기들을 탐색한 결과 거의 모든 참가자가 적용하였던 부분이 있었습니다. 
+처음에는 아주 간단한 reward와 penalty부터 출발하였습니다. [NIPS2017 competition solution](http://osim-rl.stanford.edu/docs/nips2017/solutions/)에 공개된 후기들을 탐색한 결과 거의 모든 참가자가 적용하였던 부분이 있었습니다.
+ 
   * 골반은 전방으로 기울어 져야 한다 -> pelvis의 각도
   * 머리는 항상 골반보다 앞서 위치하여야 한다 -> head, pelvis의 위치
   * 넘어지면 penalty
@@ -64,9 +84,13 @@ Deep Reinforcement Learning and Control - Imitation Learning 1</a>
      - Right camera에서 수집된 데이터는 action에 좌측으로 가는 bias를 더해줌(가운데로 가기 위해)
    * 학습(supervised learning)
 
-학습된 agent를 이용한 test는 매우 단순합니다. 다만 이 방법론은 한계점은 train 데이터셋에서 볼 수 없었던 observation이 test 시에 입력되게 된다면, action에서 미정의 동작이 발생하게 됩니다. deep-learning과는 달리 시시각각 변하는 환경에서 데이터를 입력받기 때문에, 이런 확률은 상당히 높은 편에 속하죠. 정리해서 표현하자면 expert의 trajectory 데이터셋 $P_{\text{data}}(o_t)$ 와 agent가 현재 policy $\pi_{\theta}$를 통해 경험할 수 있는 trajectory 데이터셋 $P_{\pi_{\theta}}(o_t)$ 의 분포가 다르기 때문입니다. 식으로 표현하면 다음과 같습니다. 
+학습된 agent를 이용한 test는 매우 단순합니다. 
+다만 이 방법론은 한계점은 train 데이터셋에서 볼 수 없었던 observation이 test 시에 입력되게 된다면, action에서 미정의 동작이 발생하게 됩니다. 
+deep-learning과는 달리 시시각각 변하는 환경에서 데이터를 입력받기 때문에, 이런 확률은 상당히 높은 편에 속하죠. 
+정리해서 표현하자면 expert의 trajectory 데이터셋 $P\_{\text{data}}(o\_t)$ 와 agent가 현재 policy $\pi\_{\theta}$를 통해 경험할 수 있는 
+trajectory 데이터셋 $P\_{\pi_{\theta}}(o_t)$ 의 분포가 다르기 때문입니다. 식으로 표현하면 다음과 같습니다. 
 
-$$ P_{\text{data}}(o_t) \neq P_{\pi_{\theta}}(o_t) $$
+$$ P_{\text{data}}(o\_t) \neq P\_{\pi\_{\theta}}(o\_t) $$
 
 이런 문제들을 해결하기 위해 train 데이터셋을 augmentaion하기 위한 여러 가지 방법들이 사용됩니다. [DAgger](https://arxiv.org/abs/1011.0686)(Dataset Aggregation algorithm)가 대표적인 방법론이죠. 
 <figure>
@@ -95,27 +119,28 @@ center camera.<br>from <a href="https://arxiv.org/pdf/1604.07316.pdf">End to End
 </figure>
 
 전체 프로세스를 간단하게 살펴보면 다음과 같습니다.
+
 1. Initialize policy $\pi_{\phi}^{i=0}$
     * agent는 최초에 random policy로 시작
 2. 다음 반복
     * Run policy $\pi_{\phi}^i$: 
-      - agent는 각 time step 별로 environment와 interaction 하여 samples($s_t^a, s_{t+1}^a$), action($a_t$) pair 생성
-   * Append to $$\mathcal{T}_{\pi_{\phi}}^a, \mathcal{A}_{\pi_{\phi}}$$: 
-      - 생성된 Samples는 $$\mathcal{T}_{\pi_{\phi}}^a$$ 에 action들은 $$\mathcal{A}_{\pi_{\phi}}$$에 넣어줌
+      - agent는 각 time step 별로 environment와 interaction 하여 samples($s\_t^a, s_{t+1}^a$), action($a_t$) pair 생성
+   * Append to $\mathcal{T}\_{\pi\_{\phi}}^a, \mathcal{A}\_{\pi_{\phi}}$: 
+      - 생성된 Samples는 $\mathcal{T}\_{\pi\_{\phi}}^a$ 에 action들은 $\mathcal{A}\_{\pi_{\phi}}$에 넣어줌
    * Update model $\mathcal{M}_{\theta}^i$:
-      - $$\mathcal{T}_{\pi_{\phi}}^a, \mathcal{A}_{\pi_{\phi}}$$를 사용하여 model 업데이트
+      - $\mathcal{T}\_{\pi\_{\phi}}^a, \mathcal{A}\_{\pi_{\phi}}$를 사용하여 model 업데이트
    * Infer action:
-      - model이 여러 demonstration trajectory의 모음인 $$D_{\text{demo}}$$ 사용하여 action inference
+      - model이 여러 demonstration trajectory의 모음인 $D_{\text{demo}}$ 사용하여 action inference
    * Update policy $\pi_{\phi}^i$:
-      - agent의 policy 업데이트. demonstration state들과 inference 된 action들 $$\mathcal{S}_{\text{demo}}, \tilde{\mathcal{A}}_{\text{demo}}$$를 사용하여 behavioral Cloning 수행			
+      - agent의 policy 업데이트. demonstration state들과 inference 된 action들 $\mathcal{S}_{\text{demo}}, \tilde{\mathcal{A}}\_{\text{demo}}$를 사용하여 behavioral Cloning 수행			
 
 조금 더 엄밀한 정의를 이야기하자면 모델 $\mathcal{M}_{\theta}$ 를 학습시키는 것은 observed transitions를 가장 잘 만들어낼 수 있는 $\theta^*$를 찾는 것입니다. 수식으로 표현하면 다음과 같습니다. 
 
-$$ \theta^* = {arg\,max}_\theta \prod_{i=0}^{|\mathcal{I}^{\text{pre}}|}p_{\theta}(a_i | s_i^a, s_{i+1}^a) $$ 
+$$ \theta^* = {arg\,max}\_\theta \prod\_{i=0}^{|\mathcal{I}^{\text{pre}}|}p\_{\theta}(a\_i | s\_i^a, s_{i+1}^a) $$ 
 
 이제 imitation policy $\pi_{\phi}$를 살펴보면 demonstration의 state들과 model을 통해 inference된 action의 pair {$s_i^a,  \tilde{a}_i$}를 가장 잘 매칭 시킬 수 있는 $\phi^*$를 찾습니다.
 
-$$ \phi^* = {arg\,max}_\phi \prod_{i=0}^{N}\pi_{\phi}(\tilde{a}_i | s_i) $$
+$$ \phi^* = {arg\,max}\_\phi \prod_{i=0}^{N}\pi\_{\phi}(\tilde{a}_i | s_i) $$
 
 ### Our works
 Behavioral cloning 방법론을 택했던 또 다른 중요한 이유는 강화학습 분산처리를 위해 사용하고 있었던 framework인 [Ray](https://rise.cs.berkeley.edu/projects/ray/)에서 agent가 미리 구현돼 있었다는 점입니다. 시간에 쫓기는 competition에서 이는 굉장한 이점이었습니다. 그러므로 새로운 학습방법론을 선정하는 과정에서 학습성능과 컨셉 못지않게 비중을 두었던 부분이 어떻게 하면 기존에 있던 모듈을 이용하여 구현시간을 단축할 수 있느냐는 점이었습니다. BCO는 이에 딱 알맞은 방법론이었죠. ray에서 이미 구현되어있는 BC agent를 활용해서 BCO agent를 구현하였습니다.[^1]
@@ -262,13 +287,14 @@ agent가 특정 상황에 끼어서(stuck) 더는 학습을 진행할 수 없는
 ##### Multi-Clip Reward
 여러 reference motion을 활용하여 agent를 학습시킵니다. 매 time step 별로 여러 reference 중 적합한 것을 골라내는 manually crafted kinematic planner와 같은 방식보다 간단하면서 좋은 성능을 보였다고 합니다. 수식을 보면 명확한데, 해당 time step에서 가장 reward가 높은(max) reference의 reward를 사용합니다. 
 
-$$ r_t^I = \max_{j=1, ... ,k}r_t^j $$
+$$ r\_t^I = \max_{j=1, ... ,k}r_t^j $$
 
   * $r_t^j$: j번째 motion clip의 imitation reward
 
 ### Our works
 DeepMimic을 적용하기 위해 opensim-rl의 reward function을 새로 정의하였습니다.
 DeepMimic에서 사용하였던 모든 주요 아이디어를 적용하려고 하였지만, RSI 같은 경우는 시뮬레이션 환경 자체를 뜯어고쳐야 하는 번거로움이 있었고, opensim 시뮬레이터를 그 정도로 깊게 연구할 시간이 없었기 때문에 Reward, ET, Multi-Clip Reward 정도만 적용할 수 있었습니다. 이 작업을 수행하며 고민했던 포인트는 다음과 같습니다.
+
   * demonstration 데이터의 신뢰성 문제
   * reference와 어떤 factor들의 수치를 비교할 것인가?
   * reward들의 각각의 weight는 어떤 식으로 설정할 것인가?
@@ -347,9 +373,11 @@ demo files:
 
 ## Conclusion
 round 2를 진행하며 task reward 부분을 deepmimic처럼 exp 형태로 바꾼 결정적인 이유가 있었는데, task reward를 기본 reward 형태로 설정해놓으면 전진하지 않고 그 자리에 가만히 서 있기 때문이었습니다. 그러나 round 1 같은 경우는 task reward를 변형하지 않고 기본형으로 쓰더라도 아무 문제 없이 학습이 잘되었죠. 심지어 imitation learning을 쓰지 않더라도요. 그런 이유에서 round 1의 reward를 살펴보며 차이점을 파악하려 했습니다. 이런저런 검토를 하던 중 중요한 점을 발견했습니다. 설명에 앞서 round 1과 round 2의 비교를 먼저 해보겠습니다. 우선 round 1 reward의 코드는 다음과 같습니다. 
-~~~python
+
+~~~~
 reward = 9.0 - (state_desc["body_vel"]["pelvis"][0] - 3.0)**2
 ~~~~
+
 이를 그래프로 그려보면 다음과 같습니다. x축은 속도 y축은 reward입니다.
 <figure>
   <img src="/img/imitation/reward_graph_round1.png" width="30%" alt="">
