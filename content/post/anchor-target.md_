@@ -23,12 +23,12 @@ categories = []
 ---
 ## Introduction
 
-SOTA 성능을 내는 많은 detector에서 anchor를 활용해서 bbox coordinate을 학습합니다. <br>
+SOTA 성능을 내는 많은 detector에서 anchor를 활용해서 BBox coordination을 학습합니다. <br>
 이번 글에서는 anchor가 무엇인지, 어떻게 one-stage, two-stage detector에서 사용되는지에 관해 살펴보겠습니다.
 
 이 글에 사용된 script 및 jupyter notebook은 [medipixel repository](https://github.com/medipixel/Object-Detection-Tutorial/tree/master/src/anchor)에 업로드 되어 있으니 참고하시기 바랍니다.
 
-코드 위주로 소개하기 때문에 Object Detection, Anchor가 익숙하지 않으신 분께서는 Andrew Ng 교수님이 소개하시는 [영상](https://www.youtube.com/watch?v=SXmsPXsYkTw)과 Jonathan Hui의 Object Detection [소개 자료](https://medium.com/@jonathan_hui/what-do-we-learn-from-region-based-object-detectors-faster-r-cnn-r-fcn-fpn-7e354377a7c9)를 보시면 이해에 도움이 되실겁니다.
+코드 위주로 소개하기 때문에 object detection, anchor가 익숙하지 않으신 분께서는 Andrew Ng 교수님이 소개하시는 [영상](https://www.youtube.com/watch?v=SXmsPXsYkTw)과 Jonathan Hui의 object detection [소개 자료](https://medium.com/@jonathan_hui/what-do-we-learn-from-region-based-object-detectors-faster-r-cnn-r-fcn-fpn-7e354377a7c9)를 보시면 이해에 도움이 되실겁니다.
 
 ---
 ## Import Libraries
@@ -63,15 +63,15 @@ from visualize import (draw_anchor_gt_overlaps, draw_anchor_samples_on_image,
 ---
 ## What is Anchor?
 
-- 첫 등장: Anchor라는 개념은 [Faster R-CNN](https://arxiv.org/abs/1506.01497.pdf)에서 처음으로 제안되었습니다.
-- 주요 사용처: Anchor는 대부분의 one-stage, two-stage detector에서 사용하며 대표적으로는 [RetinaNet](https://arxiv.org/abs/1708.02002.pdf)(one-stage)와 Faster R-CNN(two-stage)가 존재합니다. [[1]](#ref_1)
+- 첫 등장: anchor라는 개념은 [Faster R-CNN](https://arxiv.org/abs/1506.01497.pdf)에서 처음으로 제안되었습니다.
+- 주요 사용처: anchor는 대부분의 one-stage, two-stage detector에서 사용하며 대표적으로는 [RetinaNet](https://arxiv.org/abs/1708.02002.pdf)(one-stage)와 Faster R-CNN(two-stage)가 존재합니다. [[1]](#ref_1)
 - anchor를 사용하는 목적
-    - Object detection문제에서 우리는 이미지 상에 물체 (object)가 있는 영역을 예측하여 bounding box(bbox)를 그려야 합니다. <br>
-	이 때에, 이미지 전체를 한꺼번에 보고 특정 위치를 예측하는 것보다 특정 영역 bbox만을 보고 이 안에 물체가 있는지 예측하는 편이 더 쉽습니다. <br>
-	따라서 이미지 상에 균일하게 많은 bbox(즉, anchor)를 그린 뒤에 이 anchor들 중 gt와 서로 겹치는 영역의 넓이를 기준으로 선별된 anchor를 학습에 활용하게 됩니다.
-    - 각 Object detector 모델은 위 과정을 통해 선별된 anchor를 이용하여 **anchor와 정답(ground-truth)과의 차이**에 대해서 예측하도록 학습하게 됩니다. (bbox regression) <br>
+    - object detection 문제에서 우리는 이미지 상에 물체 (object)가 있는 영역을 예측하여 Bounding Box(BBox)를 그려야 합니다. <br>
+	이 때에, 이미지 전체를 한꺼번에 보고 특정 위치를 예측하는 것보다 특정 영역 BBox만을 보고 이 안에 물체가 있는지를 예측하는 편이 더 쉽습니다. <br>
+	따라서 이미지 상에 균일하게 많은 BBox(즉, anchor)를 그린 뒤에 이 anchor들 중 gt와 서로 겹치는 영역의 넓이를 기준으로 선별된 Anchor를 학습에 활용하게 됩니다.
+    - 각 object detector 모델은 위 과정을 통해 선별된 anchor를 이용하여 **anchor와 정답(ground-truth)과의 차이**에 대해서 예측하도록 학습하게 됩니다. (BBox regression) <br>
 	(이 때, anchor의 크기가 적절하지 못한 경우에는 차이의 편차가 커지게 될 것이므로 학습이 어려워질 수 있어서 적절한 크기를 선정하는게 중요합니다.)
-    - anchor는 균일한 간격, 일정한 규칙으로 생성 하여, 물체가 특정 위치에 존재할 때만 탐지가 잘 되거나, 혹은 특정 위치에서는 탐지가 잘 되지 않는 현상을 줄입니다. 이러한 특성을 translation-Invariance라고 하며, 대부분의 Object detector 모델이 개선하려고 노력하는 특징입니다. [[2]](#ref_2)
+    - anchor는 균일한 간격, 일정한 규칙으로 생성 하여, 물체가 특정 위치에 존재할 때만 탐지가 잘 되거나, 혹은 특정 위치에서는 탐지가 잘 되지 않는 현상을 줄입니다. 이러한 특성을 translation-Invariance라고 하며, 대부분의 object detector 모델이 개선하려고 노력하는 특징입니다. [[2]](#ref_2)
 - Parameters 설명
     - scale: feature map에서의 anchor 크기(scale)입니다.
     - ratio: feature map에서의 anchor 비율(ratio)입니다.
@@ -84,7 +84,7 @@ from visualize import (draw_anchor_gt_overlaps, draw_anchor_samples_on_image,
 이제부터 anchor를 이미지 상에 그리기 위하여 `base_anchor`와 `stride`에 대하여 알아보겠습니다.
 
 1. `base_anchor`
-	- 하나의 anchor bbox는 left top, right bottom의 x, y좌표를 각각 따서 `[x1, y1, x2, y2]`로 표현할 수 있습니다.
+	- 하나의 anchor bbox는 left top, right bottom의 x, y 좌표를 각각 따서 `[x1, y1, x2, y2]`로 표현할 수 있습니다.
 	- 한 이미지 위에 그려진 anchor의 집합을 뜻하는 `grid_anchor`는 feature map의 예측 값에 매칭되어야 하기 때문에 feature map과 동일한 width, height를 가지며 channel은 4로 갖습니다.
 	- `base_anchor`는 scale, ratio 2개 parameter로 결정되는 anchor의 작은 집합이며 모든 bbox가 같은 중심을 갖습니다. 크기 단위는 **1 `anchor_base_size`** 입니다. [[3]](#ref_3)
 		- RetinaNet의 경우 Octave scale을 사용하였습니다. Faster R-CNN에서 사용한, $2,4,6$ 등 $n$배로 올라가는 scale 간격 대신 $2^0, 2^{\frac 1 3}, 2^{\frac 2 3}$과 같이 (base scale)^(octave scale)을 사용하였습니다. [[4]](#ref_4)
@@ -101,11 +101,14 @@ from visualize import (draw_anchor_gt_overlaps, draw_anchor_samples_on_image,
 ### Settings
 anchor를 그리기 위한 hyperparameter들을 설정하겠습니다.
 
-- `gt_bboxes_list` 의 bbox 크기를 크게 잡으면 다양한 positive anchor 후보들이 생기는 것을 확인할 수 있습니다.
-- `scales`, `ratios`를 조절해서 anchor bbox의 형태를 편향되게 만들 수 있습니다.
-- `anchor_base_size`는 `anchor_stride`(`image_size` // `featmap_size`)의 값을 주로 갖습니다.
+- `gt_bboxes_list`: 예측하고자 하는 정답인 gt의 bbox 목록입니다.
+	- gt bbox 크기를 크게 잡으면 다양한 positive anchor 후보들이 생기는 것을 확인할 수 있습니다.
+- `scales`, `ratios`: `base_anchor`의 크기를 조정해주는 값입니다. 이 값들을 조정하면 anchor bbox의 형태를 편향되게 만들 수 있습니다.
+- `anchor_base_size`: feature map 상에 존재하는 anchor가 이미지 상에서 존재할 때의 크기를 결정해주는 비율 값입니다. 
+	- `anchor_stride`(`image_size` // `featmap_size`)의 값을 주로 갖습니다.
 	- 이 자료에서는 `anchor_base_size == anchor_stride == image_size // featmap_size`를 가정하겠습니다.
-- 1개 feature map에 대해서만 anchor 분석을 진행하겠습니다. multi-level feature map([FPN](https://arxiv.org/abs/1612.03144.pdf) 등)이 사용되는 경우는 후속 자료에서 살펴보도록 하겠습니다.
+
+이번 자료에서는 1개 feature map에 대해서만 anchor 분석을 진행하겠습니다. multi-level feature map([FPN](https://arxiv.org/abs/1612.03144.pdf) 등)이 사용되는 경우는 후속 자료에서 살펴보도록 하겠습니다.
 
 
 ```python
@@ -126,7 +129,7 @@ gt_bboxes_list = torch.FloatTensor([[32, 32, 32*3, 32*3]]).to(device)
 간단한 `base_anchor`를 생성하여 feature map의 첫 번째 grid cell 위치에 해당하는 이미지 상의 좌표에 그려보겠습니다.
 이 `base_anchor`가 실제 실행시에는 `scales` \* `ratios`의 개수만큼 생성되며 feature map 의 각 grid cell의 위치에 존재하게 됩니다.
 
-- 각 feature map의 grid cell은 원래의 이미지를 기준으로 하는 좌표를 가지고 있을 것입니다. 이 좌표들마다 `base_anchor`를 위치시키면 (feature map 기준 각 grid cell에 `base_anchor`가 존재하게 되면) 이미지 기준으로 stride 만큼 띄엄띄엄 `base_anchor`가 존재하는 모습을 볼 수 있습니다.
+- 각 feature map의 grid cell은 원래의 이미지를 기준으로 하는 좌표를 가지고 있습니다. 이 좌표들마다 `base_anchor`를 위치시키면 (feature map 기준 각 grid cell에 `base_anchor`가 존재하게 되면) 이미지 기준으로 stride 만큼 띄엄띄엄 `base_anchor`가 존재하는 모습을 볼 수 있습니다.
 
 ```python
 base_anchor = gen_base_anchors(anchor_base_size, ratios, scales[:1])
@@ -134,17 +137,16 @@ draw_base_anchor_on_grid(base_anchor, anchor_base_size)
 ```
 
 
-
 {{< figure library="1" src="anchor-target_9_1.png" >}}
 
 
-각 좌표에 위치한 `base_anchor`를 한 번에 그리면 도저히 알아볼 수 없을 정도로 빽빽한 사각형들이 만들어집니다.<br>
-몇 개의 샘플만을 시각화하고 실제 이미지 상에서 어떤 규칙으로 anchor를 그려내는지 확인해보겠습니다.<br>
+각 좌표에 위치한 `base_anchor`를 한 번에 그리면 도저히 알아볼 수 없을 정도로 빽빽한 사각형들이 만들어지기 때문에 몇 개의 샘플만을 시각화하고 실제 이미지 상에서 어떤 규칙으로 anchor를 그려내는지 확인해보겠습니다.<br>
 아래 그림에서 각각의 anchor들이 일정한 거리(`shifts`)를 간격으로 하여 만들어지는 것을 볼 수 있습니다.
 
 
 ```python
-draw_anchor_samples_on_image(image_shape, anchor_base_size, featmap_size, scales, ratios)
+draw_anchor_samples_on_image(image_shape, anchor_base_size, 
+                             featmap_size, scales, ratios)
 ```
 
 {{< figure library="1" src="anchor-target_11_1.png" >}}
@@ -170,10 +172,12 @@ assert len(flags) == len(anchors)
 
 ---
 ## Anchor Selection
-anchor는 gt와의 overlap 정도에 따라서 positive, negative label을 배정받습니다. 이 label들은 이 후에 regression, classification 학습에 활용되게 됩니다.
+각 anchor들은 gt와의 overlap 정도에 따라 positive, negative로 나뉘고 각각을 샘플링해서 학습에 활용합니다.
 
-- positive는 classification, regression 학습 모두에 활용됩니다. 그래야 특정 bbox에 대해서 object의 class와 bbox 좌표을 예측할 수 있게 됩니다.
-- negative는 classification에만 활용됩니다. 그 이유는 negative의 경우 background라는 정보는 가지고 있지만, 어느 위치에 물체가 있다는 정보는 가지고 있지 않기 때문입니다. [[5]](#ref_5)
+- one-stage에서는 positive anchor에 1, negative anchor에 0을  배정해서 [`RPNHead`](https://github.com/open-mmlab/mmdetection/blob/v0.6rc0/mmdet/models/anchor_heads/rpn_head.py)를 학습합니다.
+- two-stage에서는 positive anchor에 가장 overlap이 큰 gt의 class를 배정하고 negative anchor에 0을 배정해서 [`BBoxHead`](https://github.com/open-mmlab/mmdetection/blob/v0.6rc0/mmdet/models/anchor_heads/retina_head.py)를 학습합니다.
+- positive anchor는 classification, regression 학습 모두에 활용됩니다. 그래야 특정 BBox에 대해서 object의 class와 BBox 좌표을 예측할 수 있게 됩니다.
+- negative anchor는 classification에만 활용됩니다. 그 이유는 negative의 경우 background라는 정보는 가지고 있지만, 어느 위치에 물체가 있다는 정보는 가지고 있지 않기 때문입니다. [[5]](#ref_5)
 - overlap은 [IoU(Intersection over Union)](https://www.pyimagesearch.com/2016/11/07/intersection-over-union-iou-for-object-detection/)를 통해 계산합니다.
 
 
@@ -254,13 +258,11 @@ assert torch.equal(bboxes_reversed[0], gt_bboxes_list[0])
 
 ---
 ## Train anchor
-anchor target을 만들었다면 앞에서 나온 feature를 network(`anchor_head`)를 통과시켜서<br>
-regression 예측 값(`reg_pred`)으로 delta를 예측하도록, <br>
-class 예측 값(`cls_pred`)으로 실제 class를 예측하도록 <br>
-학습시키면 모델이 anchor를 기반으로 object의 class와 위치 정보를 예측할 수 있게 됩니다.
+anchor target을 만들었다면 앞에서 나온 feature를 network(`anchor_head`)를 통과시켜 <br> &ensp; &ensp; 1) regression 예측 값(`reg_pred`)으로 delta를 예측 <br> &ensp; &ensp; 2) class 예측 값(`cls_pred`)으로 실제 class를 예측 <br>
+&ensp; &ensp; 하도록 학습시키면 모델이 anchor를 기반으로 object의 class와 위치 정보를 예측할 수 있게 됩니다.
 
 - loss는 one/two-stage network 마다 다르게 적용되나 공통적으로 regression은 [smooth-l1](https://github.com/rbgirshick/py-faster-rcnn/files/764206/SmoothL1Loss.1.pdf)를, classification은 [cross entropy](https://en.wikipedia.org/wiki/Cross_entropy)를 가장 많이 사용합니다.
-- loss 계산에는 positive, negative sample을 모두 다 사용할 수는 있지만, positive sample에 비해 negative sample의 개수가 압도적으로 많으므로, 일부 정해진 숫자 만큼만의 sample을 선정하여 학습에 사용합니다.(e.g. positive:negative=1:1.) [[7]](#ref_7)
+- loss 계산에는 positive, negative sample을 모두 다 사용할 수는 있지만, positive sample에 비해 negative sample의 개수가 압도적으로 많으므로, 일부 정해진 숫자 만큼만의 sample을 선정하여 학습에 사용합니다. <br> (e.g. positive:negative=1:1.) [[7]](#ref_7)
 - 이렇게 anchor prediction을 구하고 그 중에 `neg_inds`, `pos_inds`에 해당하는 결과만 가져오는 과정을 거쳐 최종 예측결과인 `pos_neg_cls_pred`, `pos_delta_pred`를 구합니다.
 - loss를 구한 뒤에 gradient descent 하는 과정은 생략하겠습니다.
 
@@ -286,7 +288,7 @@ print("cls_loss:", cls_loss)
 ---
 ## Test
 - feature map을 받아 bbox의 `cls_pred`, `delta_pred`를 예측할 때 **delta를 예측하기 때문에**, delta를 bbox로 변환해주는 과정이 필요합니다.(`delta2bbox`)
-- **delta는 gt-anchor의 차이**라는 사실을 앞서 강조드렸는데요, 이 사실을 머리속에 잘 넣어둔다면 anchor bbox의 coordination 정보를 바탕으로 재변환해주는 과정을 수식적으로 풀어가는 과정을 어렵지 않게 이해할 수 있습니다.
+	- **delta는 gt-anchor의 차이**라는 점을 참고하시면 anchor bbox의 coordination 정보를 바탕으로 재변환을 수식적으로 풀어가는 과정을 어렵지 않게 이해하실 수 있습니다.
 - 최종적으로 object 예측 결과는 `cls_pred`가 특정 threshold 이상인 값들에 대해서 [Non-maximum suppresion(NMS)](https://en.wikipedia.org/wiki/Canny_edge_detector#Non-maximum_suppression)를 통과시킨 결과입니다.
 - `cls_pred` threshold, nms가 모두 고려되었다고 가정하고 위에서 얻은 `pos_delta_pred`를 test 결과로 얻었다고 가정하겠습니다.
 
@@ -299,7 +301,7 @@ pos_bboxes_pred = delta2bbox(pos_bboxes, pos_delta_pred)
 
 
 ```python
-# blue: gt, green: anchor, red: prediction32, 32, 9
+# blue: gt, green: anchor, red: prediction
 draw_pos_assigned_bboxes(image_shape, anchor_base_size, gt_bboxes_list,
                          pos_bboxes, pos_bboxes_pred)
 ```
@@ -313,13 +315,13 @@ draw_pos_assigned_bboxes(image_shape, anchor_base_size, gt_bboxes_list,
 ---
 ## Conclusion
 이번 글을 통해 object detection에서 anchor의 사용 목적과 구현 방법에 대해서 살펴보았습니다. <br>
-다음 글에서는 잠깐 언급한 바 있는, anchor에 positive, negative label을 assign하고 학습에 사용할sample을 뽑는 과정에 대해 살펴보겠습니다.
+다음 글에서는 잠깐 언급한 바 있는, anchor에 positive, negative label을 assign하고 학습에 사용할 sample을 뽑는 과정에 대해 살펴보겠습니다.
+<br> <br>
 
 ---
 ## Reference
 
----
-### Faster R-CNN
+#### Faster R-CNN
 [arXiv:1506.01497[cs.CV]](https://arxiv.org/abs/1506.01497)
 
 <a id="ref_2"></a>
