@@ -188,6 +188,7 @@ $\Phi$를 위와 같이 정의하면 **Corollary 2** 식(4)에 따라 $V^*_{M'}(
 > $M'$에서의 (near-) optimal policy가 $M$에서도 (near-) optimal policy임을 보장한다 라고 서술하며 **Remark 1** 을 통해 optimal이 아닌 near optimal 에서도 Theorem이 성립함을 언급합니다.
 
 ## Experiments
+---
 
 Experiments 절에서는 grid world 환경에서 potential-based shaping function을 변화를 주며 비교 실험한 결과를 보여줍니다. 두 가지 grid world 환경에서 실험합니다. 본 논문에서는 실험을 통해 특정 환경에 대한 shaping function을 정의하는 것이 아니라 속도 향상에 민감한 $\Phi$를 정하는 방향을 설명하는 것이 목적이라고 말합니다.
 
@@ -230,5 +231,6 @@ $$
 위 그래프는 위에서 부터 no shaping, $\Phi = \Phi_0(s)$, $\Phi = \Phi_1(s)$의 실험 그래프 입니다. 새롭게 정의한 $\Phi_0$ 뿐만 아니라 이전 실험에서 사용하였던 $\Phi_1$도 마찬가지로 shaping을 사용하지 않았을 때보다 학습속도가 향상되었음을 확인 할 수 있습니다.
 
 ## Discussion and Conclusions
+---
 
 이번 논문에서는 reward shaping을 위한 function $F$를 제안하였습니다. $F$는 potential-based shaping reward $\gamma \Phi(s') - \Phi$로 정의하며 이것이 (near-) optimal을 유지하는 shaping reward임을 증명하였습니다. 또한 실험을 통해 distance-based 환경과 subgoal-based 환경에서 potential function을 정의해보고 성능이 향상됨을 확인하였습니다. 이번 논문에서 알아본 potential-based shaping function의 형태는 추후 IRL과 이후의 reward shaping 논문에서 계속해서 사용되고 인용됩니다.
