@@ -22,6 +22,7 @@ categories = []
 +++
 
 ## Introduction
+---
 
 강화학습에서 task는 **Reward function**을 통해 표현됩니다. 이 reward function에 변화를 주는 것으로 학습의 성능을 향상시킬 수 있습니다. 이를 **Reward shaping** 이라고 합니다. 하지만 reward function은 굉장히 민감하기 때문에 reward shaping의 방법에 따라 의도한 것과는 다르게 학습되기도 합니다. 본 논문에서는 이런 의도하지 않은 학습 결과를 **bug**라고 표현하며 그 예시로 두 가지 경우를 설명합니다. 
 
@@ -35,6 +36,7 @@ categories = []
 본 논문에서는 reward function이 변화에 대해 policy invariance를 보장하는, 특히 positive reward cycle을 방지하는 reward function의 형태를 제안합니다.
 
 ## Preliminaries
+---
 
 ### Definitions
 
@@ -92,6 +94,7 @@ where $r$ is some positive reward.
 - positive reward cycle을 방지할 수 있는지?
 
 ## Main results
+---
 
 이번 세션에서는 어떤 형태의 $F$가 $M'$에서의 optimal policy($\pi^{*}_{M'}$) 가 $M$에서도 optimal인지 알아봅시다.
 
@@ -105,7 +108,7 @@ $$F(s_1,  a_1, s_2) + F(s_2,  a_2, s_3) + ... + F(s_n,  a_n, s_1) = 0 $$
 
 더 나아가 본 논문에서는 potential-based shaping function $F$ 가 transition probablity와 reward function이 prior knowledge로 주어지지 않았을 때, policy invariant를 보장하는 유일한 $F$ 라고 Theorem을 통해 설명합니다.
 
-### Theorem1
+### Theorem 1
 
 ![Theorem1](https://user-images.githubusercontent.com/17582508/59330543-b8cc8780-8d2c-11e9-8724-b05629c70ba3.png)
 
