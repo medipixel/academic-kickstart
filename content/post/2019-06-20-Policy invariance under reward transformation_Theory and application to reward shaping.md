@@ -21,6 +21,8 @@ categories = []
   
 +++
 
+이번 포스트에서는 RL에서 reward shaping에 대한 논문 중 기반이 되는 논문인 **"Policy invariance under reward transformation: Therory and application to reward shaping"**[[1]](#ref_1)을 읽고 정리한 내용을 공유합니다.
+
 ## Introduction
 ---
 
@@ -40,29 +42,16 @@ categories = []
 
 ### Definitions
 
-(finite-state) **Markov decision process (MDP)** $M$ : 
+- (finite-state) **Markov decision process (MDP)** $M$ : $(S, A, T, \gamma, R) $
+  - $S$ : a finite set of **states**
+  - $A$ : a set of **actions**
+  - $T$ : the next state **transition probabilities**
+  - $\gamma$ : **discount factor**
+  - $R$ : **reward function,** $R: S \times A \times S \mapsto \mathbb{R}$ with $R(s, a, s')$  
 
-$$ M = (S, A, T, \gamma, R) $$
-
-$S$ : a finite set of **states**
-
-$A$ : a set of **actions**
-
-$T$ : the next state **transition probabilities**
-
-$\gamma$ : **discount factor**
-
-$R$ : **reward function,** $R: S \times A \times S \mapsto \mathbb{R}$ with $R(s, a, s')$
-
-$\pi$ : **policy** over set of states $S$ is any function $\pi : S \mapsto A$
-
-value function :
-
-$$ V^{\pi}_{M}(s) = E[r_1 + \gamma r_2 + ...; \pi, s] $$
-
-Q-function :
-
-$$ Q^{\pi}\_{M}(s, a) = E\_{s' \sim P\_{sa}(\cdot)}[R(s, a, s') + \gamma V^{\pi}\_{M}(s') ] $$
+- $\pi$ : **policy** over set of states $S$ is any function $\pi : S \mapsto A$
+- **Value function** : $ V^{\pi}_{M}(s) = E[r_1 + \gamma r_2 + ...; \pi, s] $
+- **Q-function** : $ Q^{\pi}\_{M}(s, a) = E\_{s' \sim P\_{sa}(\cdot)}[R(s, a, s') + \gamma V^{\pi}\_{M}(s') ] $
 
 ### Shaping Rewards
 
@@ -80,10 +69,8 @@ $F$ 는 **shaping reward function** 라고 합니다. $F$를 이용해 원하는
 
 $$ F(s, a , s') =
 \begin{cases}
-r, & \mbox{if } s'이 s보다 goal에 가까움.  \\\\\\ 0, & \mbox{otherwise}
-\end{cases} $$ 
-
-where $r$ is some positive reward.
+r, & \mbox{if } s'이 \ s보다 \ goal에 \ 가까움.  \\\\\\ 0, & \mbox{otherwise}
+\end{cases} \text{, where } r \text{ is some positive reward.}$$
 
 바뀐 MDP인 $M'$은 기존 MDP인 $M$과 같은 state, action, transition probablities, discount factor를 사용하기 때문에 기존 강화학습 알고리즘(model-free, model-based, ...)에 동일하게 적용할 수 있습니다.
 
@@ -110,7 +97,7 @@ $$F(s_1,  a_1, s_2) + F(s_2,  a_2, s_3) + ... + F(s_n,  a_n, s_1) = 0 $$
 
 ### Theorem 1
 
-![Theorem1](https://user-images.githubusercontent.com/17582508/59330543-b8cc8780-8d2c-11e9-8724-b05629c70ba3.png)
+<img src="https://user-images.githubusercontent.com/17582508/59330543-b8cc8780-8d2c-11e9-8724-b05629c70ba3.png" width="70%">
 
  모든 $S​$, $A​$, $\gamma​$ 대해 shaping reward function $F ​$는 $F:S\times A \times S \mapsto \mathbb{R}  ​$로 주어진다. 이때  모든 $s \in S - {s_0}, a \in A, s' \in S​$ 를 만족하는 real-value function $\Phi: S \mapsto \mathbb{R}​$ 가 존재하면 $F​$를 **potential-based shaping function** 이라고 한다.
 
@@ -147,8 +134,7 @@ $$ \begin{align}
 > $s_0​$ 는 **absorbing state**라 하며 undiscounted MDP($\gamma​$ = 1) 일 때 return이 발산하는 것을 막기 위한 state입니다. $s_0​$에서는 다시 $s_0​$로 돌아가는 action을 반복하며 reward는 0입니다. undiscounted case의 terminal state로 이해하였습니다.
 >
 > 예시)
->
->  ![absorbing state](https://user-images.githubusercontent.com/17582508/59688137-04dd6780-9218-11e9-92b0-f9bda8165cb9.png)
+>  <img src="https://user-images.githubusercontent.com/17582508/59688137-04dd6780-9218-11e9-92b0-f9bda8165cb9.png" width="70%">
 
 그러므로 $M'​$에서의 optimal policy $\pi^*_{M'}(s)​$는 다음 식을 만족합니다.
 
@@ -166,7 +152,7 @@ $$ \begin{align}
 
 ### Corollary 2
 
-![Corollary 2](https://user-images.githubusercontent.com/17582508/59690731-d6ae5680-921c-11e9-9138-951d62d3ba57.png)
+<img src="https://user-images.githubusercontent.com/17582508/59690731-d6ae5680-921c-11e9-9138-951d62d3ba57.png" width="70%">
 
 $ F(s,a,s') = \gamma \Phi(s') - \Phi(s) $ 이고 $ \gamma = 1 $ 일 때 $ \Phi(s\_0) = 0 $를 가정하면, 모든 $ s \in S, a \in A $에서 다음 식을 만족합니다.
 
@@ -175,9 +161,11 @@ V^\*\_{M'}(s) = V^\*\_{M}(s) - \Phi(s). $$
 
 #### Proof
 
-$ V^\*(s) = \underset{a \in A}{max}Q^\*(s,a) $ 이기 때문에 식 (3)이 만족하면 식 (4)도 만족합니다. Theorem 1의 충분조건 증명을 통해 증명되었습니다.
+$ V^\*(s) = \underset{a \in A}{max}Q^\*(s,a) $ 이기 때문에 식 (3)이 만족하면 식 (4)도 만족합니다. Theorem 1의 충분조건 증명을 통해 증명되었습니다.  
 
 **Corollary 2**를 통해 $ V^\*\_{M'}(s) = V^\*\_{M}(s) - \Phi(s) $ 수식이 참임을 알게 되었습니다. 논문에서는 이 수식을 통해 $ \Phi ​$의 가장 쉬운 형태를 제안합니다.
+
+### potential-based function
 
 실제 환경에서 $ \Phi $를 정의하기 위해서는 domain에 대한 expert knowledge가 필요합니다. 만약 domain knowledge (MDP $M$)를 충분히 알고 있다면 $\Phi$를 다음과 같이 정의할 수 있습니다.
 
@@ -194,7 +182,7 @@ Experiments 절에서는 grid world 환경에서 potential-based shaping functio
 
 ### 10 x 10 grid world
 
-10 x 10 grid world 환경은 no discount setting ($ \gamma = 1 $)이며 매 step 당 -1의 reward(panalty)를 받습니다. 1 step action을 할 때 80% 확률로 exploitation 하고 20% 확률로 exploration (random action) 합니다. 이번 실험에서는 이전 절에서 제안한 $ \Phi(s) = V^\*\_{M}(s) $ 를 사용하여 agent를 학습합니다. 이 grid world 환경에서의 $V_{M}$은 현재 state에서 Goal 까지의 Manhattan distance와 같습니다. 추가로 80%의 확률로 exploitation 하기 때문에 $\Phi​$는 다음과 같이 정의합니다.
+10 x 10 grid world 환경은 no discount setting ($ \gamma = 1 $)이며 매 step 당 -1의 reward(penalty)를 받습니다. 1 step action을 할 때 80% 확률로 exploitation 하고 20% 확률로 exploration (random action) 합니다. 이번 실험에서는 이전 절에서 제안한 $ \Phi(s) = V^\*\_{M}(s) $ 를 사용하여 agent를 학습합니다. 이 grid world 환경에서의 $V_{M}$은 현재 state에서 Goal 까지의 Manhattan distance와 같습니다. 추가로 80%의 확률로 exploitation 하기 때문에 $\Phi​$는 다음과 같이 정의합니다.
 $$
 \Phi_0(s) = \hat{V}_M(s) = - {MANHATTAN}(s, GOAL) / 0.8
 $$
@@ -234,3 +222,8 @@ $$
 ---
 
 이번 논문에서는 reward shaping을 위한 function $F$를 제안하였습니다. $F$는 potential-based shaping reward $\gamma \Phi(s') - \Phi$로 정의하며 이것이 (near-) optimal을 유지하는 shaping reward임을 증명하였습니다. 또한 실험을 통해 distance-based 환경과 subgoal-based 환경에서 potential function을 정의해보고 성능이 향상됨을 확인하였습니다. 이번 논문에서 알아본 potential-based shaping function의 형태는 추후 IRL과 이후의 reward shaping 논문에서 계속해서 사용되고 인용됩니다.
+
+## Reference
+---
+<a id="ref_1"></a>
+**[1]** A. Y. Ng et al., "Policy invariance under reward transformation: Therory and application to reward shaping." Proceedings of the Sixteenth International Conference on Machine Learning(pp.278-287), 1999.
