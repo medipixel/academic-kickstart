@@ -23,6 +23,8 @@ categories = []
 
 이번 포스트에서는 RL에서 reward shaping에 대한 논문 중 기반이 되는 논문인 **"Policy invariance under reward transformation: Therory and application to reward shaping"**[[1]](#ref_1)을 읽고 정리한 내용을 공유합니다.
 
+> 글쓴이의 의견은 이 문장과 같이 블록으로 표시합니다.
+
 ## Introduction
 ---
 
@@ -69,41 +71,48 @@ $F$ 는 **shaping reward function** 라고 합니다. $F$를 이용해 원하는
 
 $$ F(s, a , s') =
 \begin{cases}
-r, & \mbox{if } s'이 \ s보다 \ goal에 \ 가까움.  \\\\\\ 0, & \mbox{otherwise}
+r, & \mbox{if } s' closer to the goal than s.  \\\\\\ 0, & \mbox{otherwise}
 \end{cases} \text{, where } r \text{ is some positive reward.}$$
 
-바뀐 MDP인 $M'$은 기존 MDP인 $M$과 같은 state, action, transition probablities, discount factor를 사용하기 때문에 기존 강화학습 알고리즘(model-free, model-based, ...)에 동일하게 적용할 수 있습니다.
+$M'$은 $M$과 같은 state, action, transition probablities, discount factor를 사용하기 때문에 강화학습 알고리즘을 동일하게 적용할 수 있습니다.
 
- 우리의 목표는 정의한 MDP 모델과 강화학습 알고리즘을 이용해 최적의 policy를 찾아내는 것입니다. 여기서 introduction에서 제시한 질문이 다시 떠오르게 됩니다. 
+ 우리의 목표는 정의한 MDP 모델과 강화학습 알고리즘을 이용해 최적의 policy를 찾아내는 것입니다. 그러기 위해서는 다음의 질문들에 대답할 필요가 있습니다.
 
 - 어떤 형태의 $F$ 를 사용해야 $M'$ 에서의 optimal policy가 $M$에서도 동일하게 optimal policy라는 것을 보장할 수 있을지?
-- 즉, 새롭게 정의한 $R'$과 $M'$을 이용하면 reward를 변화시켜도 policy invariace를 보장하는지? 
-- positive reward cycle을 방지할 수 있는지?
+- 이 때의 $M'$는 positive reward cycle을 방지할 수 있는지?
 
 ## Main results
 ---
 
-이번 세션에서는 어떤 형태의 $F$가 $M'$에서의 optimal policy($\pi^{*}_{M'}$) 가 $M$에서도 optimal인지 알아봅시다.
+이번 절에서는 어떤 형태의 $F$가 policy invariance를 보장하는지 알아봅시다.
 
-먼저 Introduction에서 자전거 문제를 예시로 들었습니다. 단순히 goal로 가까워질때 reward를 많이 주었더니 시작지점을 기준으로 원을 그리며 계속 회전하는 agent가 학습되었습니다. 이런 현상이 발생하는 이유는 위에서 언급한 reward를 $F$ 라고 하면 agent가 특정 state를 순환($ s_1 \rightarrow s_2 \rightarrow ... \rightarrow s_n \rightarrow s_1 \rightarrow ... $) 했을 때 $F$의 총합은 $F(s_1,  a_1, s_2) + F(s_2,  a_2, s_3) + ... + F(s_n,  a_n, s_1) > 0 $ 이 됩니다. 따라서 특정 state를 순환만 해도 reward가 증가하기 때문에 순환하는 policy를 optimal policy로 학습하게 됩니다. 이러한 positive reward cycle 문제를 해결하기 위해 본 논문에서는 다음과 같은 형태의 $F$를 제안합니다.
+앞서 Introduction에서 자전거 문제를 예시로 들었습니다. 이 문제에서 단순히 goal로 가까워질때 추가적인 reward를 발생시켰고, 이로 인해 시작지점을 기준으로 원을 그리며 계속해서 회전하는 policy가 학습되었습니다. 이런 현상이 발생하는 이유는 agent가 특정 state를 순환($ s_1 \rightarrow s_2 \rightarrow ... \rightarrow s_n \rightarrow s_1 \rightarrow ... $)하는 경우에 $F$의 총합이 0보다 큰 값을 갖게 되기 때문입니다.
+
+$$F(s_1,  a_1, s_2) + F(s_2,  a_2, s_3) + ... + F(s_n,  a_n, s_1) > 0$$
+
+Goal에 도달하는 agent를 학습시키기 위해서는 목적을 성취(goal에 도달)하는 경우에 대해서만 positive reward를 발생시켜야 합니다. 허나, 위의 경우 $F$에 의해 특정 state들을 순환하는 것으로도 reward가 증가하게 되고, 그로 인해 agent는 특정 구간을 순환하는 suboptimal policy를 학습하게 됩니다. 이러한 positive reward cycle 문제를 해결하기 위해 본 논문에서는 다음과 같은 형태의 $F$를 제안합니다.
 
 $$ F(s,a,s') = \Phi (s') - \Phi (s) $$
 
-여기서 $\Phi$ 를 **potential function** 이라 하며 $F$ 를 **potential-based shaping function** 이라고 합니다. $F$ 가 다음 state와 현재 state에 대한 함수의 차이로 정의되었기 때문에 위의 예시처럼 cycle이 발생하더라도 reward가 계속해서 증가되지 않게 됩니다. 
+여기서 $\Phi$ 를 **potential function** 이라 하며 $F$ 를 **potential-based shaping function** 이라고 합니다. $F$ 가 다음 state와 현재 state에 대한 함수의 차이로 정의되었기 때문에 위의 예시처럼 cycle이 발생하더라도 reward가 계속해서 증가하지 않습니다. 
 
 $$F(s_1,  a_1, s_2) + F(s_2,  a_2, s_3) + ... + F(s_n,  a_n, s_1) = 0 $$
 
-더 나아가 본 논문에서는 potential-based shaping function $F$ 가 transition probablity와 reward function이 prior knowledge로 주어지지 않았을 때, policy invariant를 보장하는 유일한 $F$ 라고 Theorem을 통해 설명합니다.
+더 나아가 본 논문에서는 transition probablity와 reward function이 prior knowledge로 주어지지 않았을 때, potential-based shaping function $F$가 policy invariant를 보장하는 유일한 $F$임을 증명합니다.
 
 ### Theorem 1
 
 <img src="https://user-images.githubusercontent.com/17582508/59330543-b8cc8780-8d2c-11e9-8724-b05629c70ba3.png" width="70%">
 
- 모든 $S​$, $A​$, $\gamma​$ 대해 shaping reward function $F ​$는 $F:S\times A \times S \mapsto \mathbb{R}  ​$로 주어진다. 이때  모든 $s \in S - {s_0}, a \in A, s' \in S​$ 를 만족하는 real-value function $\Phi: S \mapsto \mathbb{R}​$ 가 존재하면 $F​$를 **potential-based shaping function** 이라고 한다.
+ 임의의 $S​$, $A​$, $\gamma​$에 대해 임의의 shaping reward function는 다음과 같습니다.
+ 
+ $$F:S\times A \times S \mapsto \mathbb{R} $$
+ 
+ 이때, 모든 $s \in S - {s_0}, a \in A, s' \in S​$에 대해 아래 식을 만족하는 real-valued function $\Phi: S \mapsto \mathbb{R}​$ 가 존재하면 $F​$를 **potential-based shaping function** 이라고 합니다.
 
-$$ F(s,a,s') = \gamma\Phi(s') - \Phi(s) $$, (where $S - {s_0} = S$ if $\gamma < 1$)
+$$ F(s,a,s') = \gamma\Phi(s') - \Phi(s), \text{where} \ S - {s_0} = S \ \text{if} \ \gamma < 1. $$
 
- 그리고 "$ F $ 가 potential-based shaping function이다." 라는 명제는 **optimal policy consistency**를 보장하기 위한 필요충분 조건이다.
+ 그리고 potential-based shaping function $ F $ 는 **optimal policy consistency**를 보장하기 위한 필요충분 조건입니다.
 
 - (충분조건) $F$ 가 potential-based shaping function 이면 $M'$에서의 모든 optimal policy는 $M$에서도 optimal이다.
 - (필요조건) $F$ 가 potential-based shaping function이 아니라면 $M'$에서의 optimal policy가 $M$에서도 optimal임을 만족하는 transition과 reward function이 존재하지 않는다.
