@@ -21,9 +21,9 @@ categories = []
   
 +++
 
-이번 포스트에서는 강화학습에서 reward shaping의 기반이 되는 논문인 **"Policy invariance under reward transformation: Theory and application to reward shaping"**[[1]](#ref_1)을 읽고 정리한 내용을 공유합니다.
+이번 포스트에서는 강화학습에서 reward shaping의 기반이 되는 논문인 **"Policy invariance under reward transformation: Theory and application to reward shaping"**(A. Y. Ng et al., 1999) [[1]](#ref_1)을 읽고 정리한 내용을 공유합니다.
 
-> 글쓴이의 의견은 이 문장과 같이 블록으로 표시합니다.
+> 글쓴이의 의견이나 부연 설명은 이 문장과 같이 블록으로 표시합니다.
 
 ## Introduction
 ---
@@ -75,7 +75,7 @@ $F$ 는 **shaping reward function** 라고 합니다. $F$를 이용해 원하는
 
 $$ F(s, a , s') =
 \begin{cases}
-r, & \mbox{if } s' closer to the goal than s.  \\\\\\ 0, & \mbox{otherwise}
+r, & \mbox{if } s' \ closer \ to \ the \  goal \ than \ s.  \\\\\\ 0, & \mbox{otherwise}
 \end{cases} \text{, where } r \text{ is some positive reward.}$$
 
 $M'$은 $M$과 같은 state, action, transition probablities, discount factor를 사용하기 때문에 강화학습 알고리즘을 동일하게 적용할 수 있습니다.
@@ -106,7 +106,7 @@ $$F(s_1,  a_1, s_2) + F(s_2,  a_2, s_3) + ... + F(s_n,  a_n, s_1) = 0 $$
 
 ### Theorem 1
 
-<img src="https://user-images.githubusercontent.com/17582508/59330543-b8cc8780-8d2c-11e9-8724-b05629c70ba3.png" width="70%">
+<img src="https://user-images.githubusercontent.com/17582508/59330543-b8cc8780-8d2c-11e9-8724-b05629c70ba3.png" width="65%">
 
  임의의 $S​$, $A​$, $\gamma​$에 대해 임의의 shaping reward function는 다음과 같습니다.
  
@@ -127,20 +127,20 @@ Theorem 1에 따르면 위에서 언급한 optimal policy consistency를 만족�
 
 MDP $M​$에 대한 optimal Q-function $Q^{*}_{M}(s,a)​$는 다음과 같습니다.
 
-$$ Q^{\*}\_{M}(s,a) = E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + \gamma \underset{a' \in A}{\max} Q^{\*}\_{M} (s', a')]​ $$
+$$ Q^{\*}\_{M}(s,a) = E\_{s' \sim P\_{sa}(\cdot)} \bigg[R(s,a,s') + \gamma \underset{a' \in A}{\max} Q^{\*}\_{M} (s', a')\bigg]​ $$
 
 이 식에 $\Phi$을 추가해서 전개합니다.
 
 $$ \begin{align}
-Q^{\*}\_{M}(s,a) - \Phi(s) &= E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + \gamma (\underset{a' \in A}{\max} Q^{\*}\_{M} (s', a') + \Phi(s') - \Phi(s'))] - \Phi(s)​ \\\\\\
-&= E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + \gamma \Phi(s') - \Phi(s) + \gamma (\underset{a' \in A}{\max} Q^{\*}\_{M} (s', a') - \Phi(s'))] \\\\\\
+Q^{\*}\_{M}(s,a) - \Phi(s) &= E\_{s' \sim P\_{sa}(\cdot)} \bigg[R(s,a,s') + \gamma \big(\underset{a' \in A}{\max} Q^{\*}\_{M} (s', a') + \Phi(s') - \Phi(s')\big)\bigg] - \Phi(s)​ \\\\\\
+&= E\_{s' \sim P\_{sa}(\cdot)} \bigg[R(s,a,s') + \gamma \Phi(s') - \Phi(s) + \gamma \big(\underset{a' \in A}{\max} Q^{\*}\_{M} (s', a') - \Phi(s')\big)\bigg] \\\\\\
 \end{align} $$
 
 여기서 $ \hat Q\_{M'} (s,a) \triangleq Q^{\*}\_{M}(s,a)  - \Phi(s)​ $ 라 정의하고 $F(s,a,s') = \gamma \Phi(s') - \Phi(s)​$ 로 치환합니다.
 
 $$ \begin{align}
- \hat Q\_{M'} &= E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + F(s,a,s') + \gamma \underset{a' \in A}{\max} \hat Q\_{M'} (s', a')] \\\\\\
-&= E\_{s' \sim P\_{sa}(\cdot)} [R'(s,a,s') + \gamma \underset{a' \in A}{\max} \hat Q\_{M'} (s', a')] \\\\\\
+ \hat Q\_{M'} &= E\_{s' \sim P\_{sa}(\cdot)} \bigg[R(s,a,s') + F(s,a,s') + \gamma \underset{a' \in A}{\max} \hat Q\_{M'} (s', a')\bigg] \\\\\\
+&= E\_{s' \sim P\_{sa}(\cdot)} \bigg[R'(s,a,s') + \gamma \underset{a' \in A}{\max} \hat Q\_{M'} (s', a')\bigg] \\\\\\
 \end{align} $$
 
 위 식에 따르면 $ \hat Q\_{M'} (s,a) $는 결국 MDP $ M'(S, A, T, R', \gamma) $ 에서의 Q function $ Q\_{M'} (s,a)$ 와 같은 형태가 됩니다. 그리고 $M'$이 undiscounted case ($ \gamma = 1 $)이고 $\Phi(s\_0) = 0 $이라 가정했을 때 
@@ -218,7 +218,7 @@ $$
 
 <img src="https://user-images.githubusercontent.com/17582508/59762873-3404df00-92d3-11e9-9a89-8bda6b1f568e.png" width="50%">
 
-Action과 reward function의 설정은 이전 10 x 10 grid world 환경과 동일합니다. 위 그림의 grid 내부에 표시된 숫자는 각각 flag를 의미하고, agent는 모든 flag를 순서대로 (오름차순) 획득한 뒤 goal에 도착해야합니다. 이 환경에 대한 potential-function을 정의해봅시다. 만약 subgoal의 위치를 모두 알고 있고 이전 환경과 동일하게 80%의 exploitation을 한다면 우리는 goal에 도착하기까지의 timestep t를 예측할 수 있습니다. 이 환경에서는 이전 subgoal에서 다음 subgoal로 가기까지 필요한 step의 갯수가 모두 유사하기 때문에 n번째 subgoal에 도달하기 위한 step은 $((5-n_s)/5)t$ step이라고 할 수 있습니다. 이때 $n_s$는 s 일때 통과한 subgoal의 수가 됩니다.
+Action과 reward function의 설정은 이전 10 x 10 grid world 환경과 동일합니다. 위 그림의 grid 내부에 표시된 숫자는 각각 flag를 의미하고, agent는 모든 flag를 순서대로 (오름차순) 획득한 뒤 goal에 도착해야합니다. 이 환경에 대한 potential-function을 정의해봅시다. 만약 subgoal의 위치를 모두 알고 있고 이전 환경과 동일하게 80%의 exploitation을 한다면 우리는 goal에 도착하기까지의 timestep t를 예측할 수 있습니다. 이 환경에서는 이전 subgoal에서 다음 subgoal로 가기까지 필요한 step의 갯수가 모두 유사하기 때문에 n번째 subgoal에 도달하기 위한 step은 $((5-n_s)/5)t$ step이라고 할 수 있습니다. 이때 $n_s$는 $s$ 일때 통과한 subgoal의 수가 됩니다.
 
 위에서 도출한 식을 이용하여 potential-function을 다음과 같이 정의합니다.
 $$
@@ -248,4 +248,4 @@ $$
 **[1]** A. Y. Ng et al., "Policy invariance under reward transformation: Therory and application to reward shaping." Proceedings of the Sixteenth International Conference on Machine Learning(pp.278-287), 1999.
 
 <a id="ref_2"></a>
-**[2]** Sutton, R. and Barto, A., "3.4 Unified Notation for Episodic and Continuing," in *Reinforcement Learning: An Introduction,* 2nd ed., MIT Press, 2018
+**[2]** Sutton, R. and Barto, A., "3.4 Unified Notation for Episodic and Continuing," in *Reinforcement Learning: An Introduction,* 2nd ed., MIT Press, 2018.
