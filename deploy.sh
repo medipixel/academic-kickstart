@@ -8,6 +8,7 @@ hugo # if using a theme, replace with `hugo -t <YOURTHEME>`
 # Go To Public folder
 cd public
 # Add changes to git.
+git checkout master
 git add .
 
 # Commit changes.
@@ -32,3 +33,6 @@ cd ..
 git submodule update
 git submodule update --remote
 
+# Commit for updating submodule
+git add .
+git commit -m "Update submodule"

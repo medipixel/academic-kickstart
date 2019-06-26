@@ -1,5 +1,5 @@
 +++
-title = "[Test Paper Study] Policy invariance under reward transformation"
+title = "[Test2 Paper Study] Policy invariance under reward transformation"
 summary = "Reward shaping method to assure policy invaraiance in RL"
 date = 2019-06-26T13:15:00+09:00
 draft = false
