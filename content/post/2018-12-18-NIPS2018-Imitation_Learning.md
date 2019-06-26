@@ -1,6 +1,6 @@
 +++
-title = "NIPS2018 - Imitation Learning"
-summary = "Imitation Learning"
+title = "[Competition] AI for Prosthetics Challenge - Imitation Learning"
+summary = "Imitation Learning for AI for Prosthetics Challenge"
 date = 2018-12-18T22:22:17+09:00
 draft = false
 authors=["hyungkyu-kim"]
