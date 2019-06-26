@@ -36,3 +36,4 @@ git submodule update --remote
 # Commit for updating submodule
 git add .
 git commit -m "Update submodule"
+git push origin HEAD
