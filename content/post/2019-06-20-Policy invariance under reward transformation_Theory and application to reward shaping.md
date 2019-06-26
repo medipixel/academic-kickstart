@@ -21,14 +21,14 @@ categories = []
   
 +++
 
-이번 포스트에서는 RL에서 reward shaping에 대한 논문 중 기반이 되는 논문인 **"Policy invariance under reward transformation: Therory and application to reward shaping"**[[1]](#ref_1)을 읽고 정리한 내용을 공유합니다.
+이번 포스트에서는 강화학습에서 reward shaping의 기반이 되는 논문인 **"Policy invariance under reward transformation: Theory and application to reward shaping"**[[1]](#ref_1)을 읽고 정리한 내용을 공유합니다.
 
 > 글쓴이의 의견은 이 문장과 같이 블록으로 표시합니다.
 
 ## Introduction
 ---
 
-강화학습에서 task는 **Reward function**을 통해 표현됩니다. 이 reward function에 변화를 주는 것으로 학습의 성능을 향상시킬 수 있습니다. 이를 **Reward shaping** 이라고 합니다. 하지만 reward function은 굉장히 민감하기 때문에 reward shaping의 방법에 따라 의도한 것과는 다르게 학습되기도 합니다. 본 논문에서는 이런 의도하지 않은 학습 결과를 **bug**라고 표현하며 그 예시로 두 가지 경우를 설명합니다. 
+강화학습에서 task는 **Reward function**을 통해 표현됩니다. 이 reward function에 변화를 주는 것으로 학습의 성능을 향상시킬 수 있습니다. 이를 **Reward shaping** 이라고 합니다. 하지만 reward function은 굉장히 민감하기 때문에 reward shaping의 방법에 따라 agent는 의도와 다른 행동을 하기도 합니다. 본 논문에서는 이런 의도하지 않은 학습 결과를 **bug**라고 표현하며 그 예시로 두 가지 경우를 설명합니다. 
 
 1.  자전거 주행 agent를 빨리 학습시키기 위해 goal 방향으로 갈때 positive reward를 주었더니 시작 지점을 중심으로 원을 그리며 도는 agent가 되었다. 이유는 goal에서 멀어질때 penalty를 안주었기 때문에 계속 돌기만 해도 goal에 가까워질때 받은 positive reward가 무한히 쌓이기 때문이다.
 2. 축구 로봇을 학습할 때 공을 계속 점유하고 있는 것이 중요하다. 그래서 공을 건드릴 때 reward를 주었더니 공 바로 옆에서 진동하는 agent가 되었다. 공을 계속 건드려서 reward를 반복적으로 받을 수 있기 때문이다.
@@ -52,8 +52,12 @@ categories = []
   - $R$ : **reward function,** $R: S \times A \times S \mapsto \mathbb{R}$ with $R(s, a, s')$  
 
 - $\pi$ : **policy** over set of states $S$ is any function $\pi : S \mapsto A$
-- **Value function** : $ V^{\pi}_{M}(s) = E[r_1 + \gamma r_2 + ...; \pi, s] $
+- **Value function** : $ V^{\pi}_{M}(s) = E[r_1 + \gamma r_2 + ...; \pi, s만] $
 - **Q-function** : $ Q^{\pi}\_{M}(s, a) = E\_{s' \sim P\_{sa}(\cdot)}[R(s, a, s') + \gamma V^{\pi}\_{M}(s') ] $
+- $\textbf s_0​$: 본 논문에서는 $s_0$를 **absorbing state**라 하며, undiscounted MDP($\gamma​$ = 1) 일 때 더이상 reward를 주지 않는 state를 표현합니다. 이는 episodic task를 continuing task로 일반화할 때 terminal state와 같은 역할을 합니다. $s_0​$에서는 모든 action이 $s_0​$로의 state transition (상태 전이) 만을 발생시킵니다. 아래 그림이 하나의 예시입니다. (본 논문의 figure 3)[[2]](#ref_2)
+<center><img src="https://user-images.githubusercontent.com/17582508/60148246-461eda00-980b-11e9-99e3-e3f836d72c2e.png" width="70%"></center>
+
+> 일반적으로 $s_0$는 episode의 가장 첫번째 state를 표현하지만 본 논문에서는 absorbing state를 뜻합니다.
 
 ### Shaping Rewards
 
@@ -98,7 +102,7 @@ $$ F(s,a,s') = \Phi (s') - \Phi (s) $$
 
 $$F(s_1,  a_1, s_2) + F(s_2,  a_2, s_3) + ... + F(s_n,  a_n, s_1) = 0 $$
 
-더 나아가 본 논문에서는 transition probablity와 reward function이 prior knowledge로 주어지지 않았을 때, potential-based shaping function $F$가 policy invariant를 보장하는 유일한 $F$임을 증명합니다.
+더 나아가 본 논문에서는 transition probablity와 reward function이 prior knowledge로 주어지지 않았을 때, potential-based shaping function $F$가 policy invariance를 보장하는 유일한 $F$임을 증명합니다.
 
 ### Theorem 1
 
@@ -117,45 +121,46 @@ $$ F(s,a,s') = \gamma\Phi(s') - \Phi(s), \text{where} \ S - {s_0} = S \ \text{if
 - (충분조건) $F$ 가 potential-based shaping function 이면 $M'$에서의 모든 optimal policy는 $M$에서도 optimal이다.
 - (필요조건) $F$ 가 potential-based shaping function이 아니라면 $M'$에서의 optimal policy가 $M$에서도 optimal임을 만족하는 transition과 reward function이 존재하지 않는다.
 
-Theorem 1에 따르면 위에서 언급한 optimal policy consistency를 만족하는 shaping function $F$가 식 (2)의 형태이고 이 형태가 optimal policy consistency를 만족하는 유일한 $F$입니다. 논문에서는 Theorem 1의 충분조건을 증명합니다. (필요조건은 논문의 **Appendix A**를 참고)
+Theorem 1에 따르면 위에서 언급한 optimal policy consistency를 만족하는 shaping function $F$가 식 (2)의 형태이고, 이 형태가 optimal policy consistency를 만족하는 유일한 $F$입니다.
 
-#### Proof
+#### Proof: 충분조건
 
-기존 강화학습에서 MDP $M​$에서의 optimal Q-function $Q^{*}_{M}(s,a)​$는 다음과 같습니다.
+MDP $M​$에 대한 optimal Q-function $Q^{*}_{M}(s,a)​$는 다음과 같습니다.
 
-$$ Q^{\*}\_{M}(s,a) = E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + \gamma \underset{a' \in A}{max} Q^{\*}\_{M} (s', a')]​ $$
+$$ Q^{\*}\_{M}(s,a) = E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + \gamma \underset{a' \in A}{\max} Q^{\*}\_{M} (s', a')]​ $$
 
 이 식에 $\Phi$을 추가해서 전개합니다.
 
-$$ Q^{\*}\_{M}(s,a) - \Phi(s) = E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + \gamma (\underset{a' \in A}{max} Q^{\*}\_{M} (s', a') + \Phi(s') - \Phi(s'))] - \Phi(s)​$$
-
-$$ Q^{\*}\_{M}(s,a) - \Phi(s) = E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + \gamma \Phi(s') - \Phi(s) + \gamma (\underset{a' \in A}{max} Q^{\*}\_{M} (s', a') - \Phi(s'))] $$
-
-여기서 $ \hat Q\_{M'} (s,a) \triangleq Q^{\*}\_{M}(s,a)  - \Phi(s)​ $ 라 정의하고 $F(s,a,s') = \gamma \Phi(s') - \Phi(s)​$ 를 이전 식에 대입합니다.
-
 $$ \begin{align}
- \hat Q\_{M'} &= E\_{s'} [R(s,a,s') + F(s,a,s') + \gamma \underset{a' \in A}{max} \hat Q\_{M'} (s', a')] \\\\\\
-&= E\_{s'} [R'(s,a,s') + \gamma \underset{a' \in A}{max} \hat Q\_{M'} (s', a')] \\\\\\
+Q^{\*}\_{M}(s,a) - \Phi(s) &= E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + \gamma (\underset{a' \in A}{\max} Q^{\*}\_{M} (s', a') + \Phi(s') - \Phi(s'))] - \Phi(s)​ \\\\\\
+&= E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + \gamma \Phi(s') - \Phi(s) + \gamma (\underset{a' \in A}{\max} Q^{\*}\_{M} (s', a') - \Phi(s'))] \\\\\\
 \end{align} $$
 
-위 식에 따르면 $ \hat Q\_{M'} (s,a) $는 결국 MDP $ M'(S, A, T, R', \gamma) $ 에서의 Q function $ Q\_{M'} (s,a)$ 와 같은 형태가 됩니다. 그리고 $M'$이 undiscounted case ($ \gamma = 0 $)이고 $\Phi(s\_0) = 0 $이라 가정했을 때 $ \hat Q\_{M'}(s\_0, a) = Q^{\*}\_{M}(s\_0,a)  - \Phi(s\_0) = 0 - 0 = 0 $ 을 만족하게 됩니다. 따라서 $\hat{Q}_{M'} (s,a)​$는 Bellman equation을 만족하며 unique optimal Q-function을 반드시 갖게 됩니다.
+여기서 $ \hat Q\_{M'} (s,a) \triangleq Q^{\*}\_{M}(s,a)  - \Phi(s)​ $ 라 정의하고 $F(s,a,s') = \gamma \Phi(s') - \Phi(s)​$ 로 치환합니다.
 
-> $s_0​$ 는 **absorbing state**라 하며 undiscounted MDP($\gamma​$ = 1) 일 때 return이 발산하는 것을 막기 위한 state입니다. $s_0​$에서는 다시 $s_0​$로 돌아가는 action을 반복하며 reward는 0입니다. undiscounted case의 terminal state로 이해하였습니다.
->
-> 예시)
->  <img src="https://user-images.githubusercontent.com/17582508/59688137-04dd6780-9218-11e9-92b0-f9bda8165cb9.png" width="70%">
+$$ \begin{align}
+ \hat Q\_{M'} &= E\_{s' \sim P\_{sa}(\cdot)} [R(s,a,s') + F(s,a,s') + \gamma \underset{a' \in A}{\max} \hat Q\_{M'} (s', a')] \\\\\\
+&= E\_{s' \sim P\_{sa}(\cdot)} [R'(s,a,s') + \gamma \underset{a' \in A}{\max} \hat Q\_{M'} (s', a')] \\\\\\
+\end{align} $$
+
+위 식에 따르면 $ \hat Q\_{M'} (s,a) $는 결국 MDP $ M'(S, A, T, R', \gamma) $ 에서의 Q function $ Q\_{M'} (s,a)$ 와 같은 형태가 됩니다. 그리고 $M'$이 undiscounted case ($ \gamma = 1 $)이고 $\Phi(s\_0) = 0 $이라 가정했을 때 
+$$ \hat Q\_{M'}(s\_0, a) = Q^{\*}\_{M}(s\_0,a)  - \Phi(s\_0) = 0 - 0 = 0 $$
+ 을 만족하게 됩니다. 따라서 $\hat{Q}_{M'} (s,a)​$는 Bellman equation을 만족하며 unique optimal Q-function을 반드시 갖게 됩니다.
+
 
 그러므로 $M'​$에서의 optimal policy $\pi^*_{M'}(s)​$는 다음 식을 만족합니다.
 
 $$ \begin{align}
- \pi^\*\_{M'}(s) &\in \underset{a\in A}{argmax} Q^\*\_{M'}(s,a) \\\\\\
-&= \underset{a\in A}{argmax} Q^\*\_{M}(s,a) - \Phi(s) \\\\\\
-&= \underset{a\in A}{argmax} Q^\*\_{M}(s,a)
+ \pi^\*\_{M'}(s) &\in \underset{a\in A}{\arg\max} Q^\*\_{M'}(s,a) \\\\\\
+&= \underset{a\in A}{\arg\max} Q^\*\_{M}(s,a) - \Phi(s) \\\\\\
+&= \underset{a\in A}{\arg\max} Q^\*\_{M}(s,a)
 \end{align} $$
 
 즉, $M'$에서의 optimal policy $\pi^*_{M'}(s)$는 $M$에서 또한 optimal policy임을 알 수 있습니다.
 
-위의 **Theorem 1**의 증명을 통해 potential-based shaping function이 policy invariant를 보장하는 유일한 $F$임을 증명하였습니다. 그렇다면 potential-based shaping function의 $\Phi$는 어떤 식으로 정의해야할까요? 논문에서는 **Corollary 2**를 통해 $\Phi​$를 구하는 한가지 방법을 서술합니다.
+> 필요조건의 증명은 논문의 **Appendix A**를 참고하시기 바랍니다.
+
+위의 **Theorem 1**의 필요충분 조건에 대한 증명을 통해 potential-based shaping function이 policy invariance를 보장하는 유일한 $F$임을 증명하였습니다. 그렇다면 potential-based shaping function의 $\Phi$는 어떤 식으로 정의해야할까요? 논문에서는 **Corollary 2**를 통해 $\Phi​$를 구하는 한가지 방법을 서술합니다.
 
 > **Corollary(따름 정리)**는 Theorem으로부터 바로 증명할 수 있는 참인 명제를 말합니다.
 
@@ -163,69 +168,74 @@ $$ \begin{align}
 
 <img src="https://user-images.githubusercontent.com/17582508/59690731-d6ae5680-921c-11e9-9138-951d62d3ba57.png" width="70%">
 
-$ F(s,a,s') = \gamma \Phi(s') - \Phi(s) $ 이고 $ \gamma = 1 $ 일 때 $ \Phi(s\_0) = 0 $를 가정하면, 모든 $ s \in S, a \in A $에서 다음 식을 만족합니다.
+$ F(s,a,s') = \gamma \Phi(s') - \Phi(s) $ 이고 $ \gamma = 1 $ 일 때 $ \Phi(s\_0) = 0 $를 가정하면, 모든 $ s \in S, a \in A $ 대해 다음 식을 만족합니다.
 
 $$ Q^\*\_{M'}(s,a) = Q^\*\_{M}(s,a) - \Phi(s), \\\\\\
 V^\*\_{M'}(s) = V^\*\_{M}(s) - \Phi(s). $$
 
-#### Proof
+#### Proof: Corollary 2
 
-$ V^\*(s) = \underset{a \in A}{max}Q^\*(s,a) $ 이기 때문에 식 (3)이 만족하면 식 (4)도 만족합니다. Theorem 1의 충분조건 증명을 통해 증명되었습니다.  
+식 (3)은 Theorem 1의 충분조건의 증명과정을 통해 증명되었습니다. $ V^\*(s) = \underset{a \in A}{\max}Q^\*(s,a) $ 이기 때문에 식 (3)을 만족하면 식 (4)도 만족합니다.
 
-**Corollary 2**를 통해 $ V^\*\_{M'}(s) = V^\*\_{M}(s) - \Phi(s) $ 수식이 참임을 알게 되었습니다. 논문에서는 이 수식을 통해 $ \Phi ​$의 가장 쉬운 형태를 제안합니다.
+**Corollary 2**를 통해 $ V^\*\_{M'}(s) = V^\*\_{M}(s) - \Phi(s) $이 참임을 알게 되었습니다. 논문에서는 (4)를 통해 $ \Phi ​$의 가장 쉬운 형태를 제안합니다.
 
 ### potential-based function
 
-실제 환경에서 $ \Phi $를 정의하기 위해서는 domain에 대한 expert knowledge가 필요합니다. 만약 domain knowledge (MDP $M$)를 충분히 알고 있다면 $\Phi$를 다음과 같이 정의할 수 있습니다.
+실제 환경에서 $ \Phi $를 정의하기 위해서는 domain에 대한 expert knowledge가 필요합니다. 만약 domain knowledge (MDP $M$)를 충분히 알고 있다면 $\Phi$를 다음과 같이 가정할 수 있습니다.
 
 $$ \Phi(s) = V^\*\_{M}(s) $$
 
-$\Phi$를 위와 같이 정의하면 **Corollary 2** 식(4)에 따라 $V^*_{M'}(s) \equiv 0$ 이 됩니다. 논문에서는 이런 형태의 value function이 학습에 용이하다고 합니다. 또한 위의 형태가 아닌 형태의 $\Phi$를 이용해도 충분히 policy invariant를 보장한다고 서술합니다.
+$\Phi$를 위와 같이 가정하면 **Corollary 2**의 (4)에 따라 $M'$에 대한 value function은 $V^*_{M'}(s) \equiv 0$입니다. 논문에서는 이런 형태의 value function이 학습에 용이하다고 합니다. 또한 위와 다른 형태의 $\Phi$를 이용해도 충분히 policy invariance를 보장한다고 주장합니다.
 
-> $M'$에서의 (near-) optimal policy가 $M$에서도 (near-) optimal policy임을 보장한다 라고 서술하며 **Remark 1** 을 통해 optimal이 아닌 near optimal 에서도 Theorem이 성립함을 언급합니다.
+> $M'$에서의 (near-) optimal policy가 $M$에서도 (near-) optimal policy임을 보장한다 라고 서술하며 **Remark 1** 을 통해 optimal이 아닌 near optimal 에서도 **Theorem 1**이 성립함을 언급합니다.
+> <img src="https://user-images.githubusercontent.com/17582508/60153261-b551f980-981e-11e9-9834-1477ee0eed70.png" width="70%">
+
 
 ## Experiments
 ---
 
-Experiments 절에서는 grid world 환경에서 potential-based shaping function을 변화를 주며 비교 실험한 결과를 보여줍니다. 두 가지 grid world 환경에서 실험합니다. 본 논문에서는 실험을 통해 특정 환경에 대한 shaping function을 정의하는 것이 아니라 속도 향상에 민감한 $\Phi$를 정하는 방향을 설명하는 것이 목적이라고 말합니다.
+Experiments 절에서는 두 가지 grid world 환경에서 potential-based shaping function에 변화를 주며 비교 실험한 결과를 보여줍니다. 본 논문에서는 이 실험을 통해 학습 속도 향상을 위한 합리적인 $\Phi$를 정하는 방향을 설명하는 것이 목적이라고 말합니다.
 
 ### 10 x 10 grid world
 
-10 x 10 grid world 환경은 no discount setting ($ \gamma = 1 $)이며 매 step 당 -1의 reward(penalty)를 받습니다. 1 step action을 할 때 80% 확률로 exploitation 하고 20% 확률로 exploration (random action) 합니다. 이번 실험에서는 이전 절에서 제안한 $ \Phi(s) = V^\*\_{M}(s) $ 를 사용하여 agent를 학습합니다. 이 grid world 환경에서의 $V_{M}$은 현재 state에서 Goal 까지의 Manhattan distance와 같습니다. 추가로 80%의 확률로 exploitation 하기 때문에 $\Phi​$는 다음과 같이 정의합니다.
+10 x 10 grid world 환경은 no discount setting ($ \gamma = 1 $)이며 매 step 당 -1의 reward(penalty)를 받습니다. 1 step action을 할 때 80% 확률로 exploitation 하고 20% 확률로 exploration (random action) 합니다. 저자들은 이전 절에서 좋은 shaping potential $ \Phi(s) = V^\*\_{M}(s) $ 를 제안했습니다. 이 실험환경에서의 $ V^*\_{M} $ 은 현재 state에서 Goal 까지의 Manhattan distance로 볼 수 있습니다. 여기에 80%의 확률로 exploitation하는 것을 감안하여 $V^\*\_{M}$에 가까운 $\Phi​$ 를 다음과 같이 정의합니다.
+
 $$
 \Phi_0(s) = \hat{V}_M(s) = - {MANHATTAN}(s, GOAL) / 0.8
 $$
 
 > 참고: [Manhattan distance wiki](https://en.wikipedia.org/wiki/Taxicab_geometry)
 
-그리고 $ \Phi(s) = V^\*\_{M}(s) ​$ 가 아닌 $V^*_{M}(s) ​$와 거리가 먼 $\Phi(s)​$를 사용하는 경우를 보여주기 위해  $ \Phi(s) = 0.5\Phi_0(s) ​$ 로도 실험합니다. 실험 결과는 아래와 같습니다.
+그리고 $V^\*\_{M}$와 좀 더 먼 $\Phi​$ 에 대해서도 shaping potential이 잘 동작하는 것을 보이기 위해 $ \Phi(s) = 0.5 \Phi_0(s) = 0.5 \hat{V}_M(s) ​$ 에 대해서도 실험합니다. 실험 결과는 아래와 같습니다.
 
-![experiment 1](https://user-images.githubusercontent.com/17582508/59761653-5812f100-92d0-11e9-8934-9fbca9d5aa9d.png)
+<img src="https://user-images.githubusercontent.com/17582508/59761653-5812f100-92d0-11e9-8934-9fbca9d5aa9d.png" width="90%">
 
-그래프를 통해 논문에서 제안한 shaping을 사용하지 않을때에 비해 빠른 속도로 수렴함을 확인 할 수 있습니다. 또한 $0.5\Phi_0(s)$를 사용하더라도 $\Phi_0(s) = \hat{V}_M(s)$를 사용했을 때와 거의 유사하게 속도가 향상됨을 보여줍니다. 또한 조금 더 큰 환경인 50 x 50 grid world 환경에서 학습하였을 때도 마찬가지로 potential-based shaping reward를 사용한 경우가 더 빠르게 성능이 향상됨을 확인 할 수 있습니다.
+위 그래프를 통해 $0.5 \Phi_0(s)$와 $\Phi_0(s)$를 shaping potential로 사용했을때, shaping을 사용하지 않은 경우에 비해 학습이 빠른 속도로 수렴함을 확인 할 수 있습니다. 또한 $0.5\Phi_0(s)$를 사용하더라도 $\Phi_0(s)$를 사용했을 때와 거의 유사하게 학습 속도가 향상됨을 보여줍니다. 나아가 조금 더 큰 환경인 50 x 50 grid world 환경에서도 potential-based shaping reward를 사용한 경우에 성능이 더 빠르게 향상됨을 확인 할 수 있습니다.
 
 ### 5 x 5 grid world with subgoals
 
-이번 실험에서는 subgoal이 있는 환경에서도 reward function이 잘 작동하는지 확인합니다. 
+이번 실험에서는 subgoal이 있는 환경에서도 potential-based shaping reward이 잘 작동하는지 확인합니다. 
 
-![grid world with subgoal](https://user-images.githubusercontent.com/17582508/59762873-3404df00-92d3-11e9-9a89-8bda6b1f568e.png)
+<img src="https://user-images.githubusercontent.com/17582508/59762873-3404df00-92d3-11e9-9a89-8bda6b1f568e.png" width="50%">
 
-action과 reward는 이전 gird world 환경과 같습니다. 위 그림의 해당 숫자는 flag 위치를 의미하고 agent는 모든 flag를 순서대로 획득한 뒤 goal에 도착해야합니다. 이런 환경에서 potential-function을 정의해봅시다. 만약 subgoal의 위치를 알고 있고 이전 환경과 동일하게 80%의 exploitation을 한다면 우리는 goal에 도착하기까지의 timestep t를 예상할 수 있습니다. 위 환경을 보면 이전 subgoal에서 다음 subgoal로 가는데 드는 힘이 모두 유사하기 때문에 n번째 subgoal에 도달하기 위한 step은 $((5-n_s)/5)t$ step이라고 할 수 있다. $n_s$는 s 일때 통과한 subgoal의 수가 됩니다. 위 식을 조금 수정하여 potential-function을 정의하면 다음과 같습니다.
+Action과 reward function의 설정은 이전 10 x 10 grid world 환경과 동일합니다. 위 그림의 grid 내부에 표시된 숫자는 각각 flag를 의미하고, agent는 모든 flag를 순서대로 (오름차순) 획득한 뒤 goal에 도착해야합니다. 이 환경에 대한 potential-function을 정의해봅시다. 만약 subgoal의 위치를 모두 알고 있고 이전 환경과 동일하게 80%의 exploitation을 한다면 우리는 goal에 도착하기까지의 timestep t를 예측할 수 있습니다. 이 환경에서는 이전 subgoal에서 다음 subgoal로 가기까지 필요한 step의 갯수가 모두 유사하기 때문에 n번째 subgoal에 도달하기 위한 step은 $((5-n_s)/5)t$ step이라고 할 수 있습니다. 이때 $n_s$는 s 일때 통과한 subgoal의 수가 됩니다.
+
+위에서 도출한 식을 이용하여 potential-function을 다음과 같이 정의합니다.
 $$
 \Phi_0(s) = -((5 - n_s - 0.5)/5 )t
 $$
 
-> 0.5는 일반적으로 agent가 n번째 subgoal과 n+1번째 subgoal 중간에 있기 때문에 보정해주는 값이다.
+> 0.5는 일반적으로 agent가 n번째 subgoal과 n+1번째 subgoal 중간에 있기 때문에 이를 보정해주기 위한 값입니다.
 
-또 다른 potential-function으로 이전 환경에서 사용했던 $\hat{V}_M(s)​$를 사용합니다.
+또 다른 potential-function으로 10 x 10 grid world 환경에서 사용했던 $\hat{V}_M(s)​$를 사용합니다.
 $$
-\Phi_1(s) = \hat{V}_M(s)
+\Phi_1(s) = \hat{V}_M(s)  = - {MANHATTAN}(s, GOAL) / 0.8
 $$
-이렇게 정의한 potential function을 통해 실험한 결과 그래프는 다음과 같습니다.
+이렇게 정의한 potential function을 통해 실험한 결과는 다음과 같습니다.
 
-![expriment2](https://user-images.githubusercontent.com/17582508/59764671-3832fb80-92d7-11e9-8c87-c57b75427551.png)
+<img src="https://user-images.githubusercontent.com/17582508/59764671-3832fb80-92d7-11e9-8c87-c57b75427551.png" width="70%">
 
-위 그래프는 위에서 부터 no shaping, $\Phi = \Phi_0(s)$, $\Phi = \Phi_1(s)$의 실험 그래프 입니다. 새롭게 정의한 $\Phi_0$ 뿐만 아니라 이전 실험에서 사용하였던 $\Phi_1$도 마찬가지로 shaping을 사용하지 않았을 때보다 학습속도가 향상되었음을 확인 할 수 있습니다.
+위 그래프는 위에서 부터 no shaping, $\Phi = \Phi_0(s)$, $\Phi = \Phi_1(s)$에 해당합니다. 이전 실험에서 정의한 $\Phi_1$ 뿐만 아니라 새로 정의한 $\Phi_0$을 사용하였을때에도 마찬가지로 shaping을 사용하지 않은 경우보다 학습속도가 향상되었음을 확인 할 수 있습니다.
 
 ## Discussion and Conclusions
 ---
@@ -236,3 +246,6 @@ $$
 ---
 <a id="ref_1"></a>
 **[1]** A. Y. Ng et al., "Policy invariance under reward transformation: Therory and application to reward shaping." Proceedings of the Sixteenth International Conference on Machine Learning(pp.278-287), 1999.
+
+<a id="ref_2"></a>
+**[2]** Sutton, R. and Barto, A., "3.4 Unified Notation for Episodic and Continuing," in *Reinforcement Learning: An Introduction,* 2nd ed., MIT Press, 2018
