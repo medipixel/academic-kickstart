@@ -21,7 +21,7 @@ categories = []
   
 +++
 
-이번 포스트에서는 강화학습에서 reward shaping의 기반이 되는 논문인 **"Policy invariance under reward transformation: Theory and application to reward shaping"**(A. Y. Ng et al., 1999) [[1]](#ref_1)을 읽고 정리한 내용을 공유합니다.
+이번 포스트에서는 강화학습에서 reward shaping의 기반이 되는 논문인 **"Policy invariance under reward transformation: Theory and application to reward shaping"** (A. Y. Ng et al., 1999) [[1]](#ref_1)을 읽고 정리한 내용을 공유합니다.
 
 > 글쓴이의 의견이나 부연 설명은 이 문장과 같이 블록으로 표시합니다.
 
