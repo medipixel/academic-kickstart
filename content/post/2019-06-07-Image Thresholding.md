@@ -1,5 +1,5 @@
 +++
-title = "Image Thresholding"
+title = "[Tutorial] Image Thresholding"
 summary = "Image threshold using OpenCV"
 date = 2019-06-07T12:00:00+09:00
 draft = false

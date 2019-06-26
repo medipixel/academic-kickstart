@@ -1,5 +1,5 @@
 +++
-title = "Histogram"
+title = "[Tutorial] Histogram"
 summary = "Histogram using OpenCV"
 date = 2019-05-31T12:00:00+09:00
 draft = false

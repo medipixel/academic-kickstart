@@ -1,9 +1,9 @@
 +++
 # Display name
-name = "Kyunghwan Kim"
+name = "Curt Park"
 
 # Username (this should match the folder name)
-authors = ["kyunghwan-kim"]
+authors = ["curt-park"]
 
 # Is this the primary user of the site?
 superuser = true
@@ -19,7 +19,7 @@ organizations = [ { name = "Medipixel", url = "https://www.medipixel.io/" } ]
 # bio = "My research interests include distributed robotics, mobile computing and programmable matter."
 
 # Enter email to display Gravatar (if Gravatar enabled in Config)
-email = "khsyee@gmail.com"
+email = "www.jwpark.co.kr@gmail.com"
 
 # List (academic) interests or hobbies
 interests = [
@@ -46,22 +46,22 @@ user_groups = ["Researchers", "Visitors"]
 [[social]]
   icon = "envelope"
   icon_pack = "fas"
-  link = "mailto:kh.kim@medipixel.io"  # For a direct email link, use "mailto:test@example.org".
+  link = "mailto:curt.park@medipixel.io"  # For a direct email link, use "mailto:test@example.org".
 
 [[social]]
   icon = "github"
   icon_pack = "fab"
-  link = "https://github.com/mrsyee"
+  link = "https://github.com//Curt-Park"
 
 [[social]]
   icon = "facebook"
   icon_pack = "fab"
-  link = "https://www.facebook.com/blue2856"
+  link = "https://www.facebook.com/jinwoo.curt.park"
 
 [[social]]
   icon = "linkedin"
   icon_pack = "fab"
-  link = "https://www.linkedin.com/in/kyunghwan-kim-0739a314a"
+  link = "https://www.linkedin.com/in/curt-park/"
 
 # Link to a PDF of your resume/CV from the About widget.
 # To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.

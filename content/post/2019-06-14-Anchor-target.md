@@ -1,7 +1,7 @@
 +++
-title = "Anchor"
+title = "[Tutorial] Anchor"
 summary = "Anchor algorithm in MMDetection"
-date = 2019-05-30T13:15:00+09:00
+date = 2019-06-14T13:15:00+09:00
 draft = false
 authors=["young-kim", "whi-kwon"]
 # Tags and categories
@@ -104,7 +104,7 @@ anchor를 그리기 위한 hyperparameter들을 설정하겠습니다.
 - `gt_bboxes_list`: 예측하고자 하는 정답인 gt의 bbox 목록입니다.
 	- gt bbox 크기를 크게 잡으면 다양한 positive anchor 후보들이 생기는 것을 확인할 수 있습니다.
 - `scales`, `ratios`: `base_anchor`의 크기를 조정해주는 값입니다. 이 값들을 조정하면 anchor bbox의 형태를 편향되게 만들 수 있습니다.
-- `anchor_base_size`: feature map 상에 존재하는 anchor가 이미지 상에서 존재할 때의 크기를 결정해주는 비율 값입니다. 
+- `anchor_base_size`: feature map 상에 존재하는 anchor가 이미지 상에서 존재할 때의 크기를 결정해주는 비율 값입니다.
 	- `anchor_stride`(`image_size` // `featmap_size`)의 값을 주로 갖습니다.
 	- 이 자료에서는 `anchor_base_size == anchor_stride == image_size // featmap_size`를 가정하겠습니다.
 
@@ -145,7 +145,7 @@ draw_base_anchor_on_grid(base_anchor, anchor_base_size)
 
 
 ```python
-draw_anchor_samples_on_image(image_shape, anchor_base_size, 
+draw_anchor_samples_on_image(image_shape, anchor_base_size,
                              featmap_size, scales, ratios)
 ```
 
