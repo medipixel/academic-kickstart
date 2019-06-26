@@ -13,9 +13,14 @@ git add .
 # Commit changes.
 msg="rebuilding site `date`"
 if [ $# -eq 1 ]
-     then msg="$1"
+then 
+    echo "Input commit message!"
+    msg="$1"
+    git commit -m "$msg"
+else
+    echo "Don't input commit message!"
+    git commit
 fi
-git commit -m "$msg"
    
 # Push source and build repos.
 git push origin master
