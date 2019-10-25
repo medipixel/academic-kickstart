@@ -3,7 +3,7 @@ title = "강화학습의 혈관 속 탐험 - 로봇 제어와 강화학습"
 summary = "Introduction of guide-wire control for PCI by RL - Why we use RL?"
 date = 2019-10-25T10:00:00+09:00
 draft = false
-authors=["kyunghwan-kim"]
+authors=["kyunghwan-kim", "chaehyeuk-lee"]
 # Tags and categories
 # For example, use `tags = []` for no tags, or the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
 tags = []
