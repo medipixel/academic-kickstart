@@ -1,6 +1,6 @@
 +++
-title = "강화학습의 혈관 속 탐험 - 로봇 제어와 강화학습"
-summary = "Introduction of guide-wire control for PCI by RL - Why we use RL?"
+title = "강화학습의 혈관 속 탐험 (1) - 로봇과 심혈관 중재 시술"
+summary = "Introduction to guide-wire control for PCI by RL - PCI aided by Robot"
 date = 2019-10-25T10:00:00+09:00
 draft = false
 authors=["kyunghwan-kim", "chaehyeuk-lee"]
