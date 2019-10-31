@@ -1,7 +1,7 @@
 +++
 title = "강화학습의 혈관 속 탐험 (1) - 로봇과 심혈관 중재시술"
 summary = "Introduction to guide-wire control for PCI by RL - PCI aided by Robot"
-date = 2019-10-25T10:00:00+09:00
+date = 2019-10-31T10:00:00+09:00
 draft = false
 authors=["kyunghwan-kim", "chaehyeuk-lee"]
 # Tags and categories
