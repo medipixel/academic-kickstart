@@ -1,7 +1,7 @@
 +++
 title = "강화학습의 혈관 속 탐험 (2) - 강화학습과 제어 이론의 비교"
 summary = "Introduction to guide-wire control for PCI by RL (2) - RL vs Control Theory"
-date = 2019-11-20T13:00:00+09:00
+date = 2019-11-26T10:00:00+09:00
 draft = false
 authors=["chaehyeuk-lee", "kyunghwan-kim"]
 # Tags and categories
@@ -23,7 +23,7 @@ categories = []
 
 #### 강화학습의 혈관 속 탐험 시리즈 \
 [강화학습의 혈관 속 탐험 (1) - 로봇과 심혈관 중재 시술]({{< ref "2019-10-25-adventure_of_rl_in_vessel_1.md" >}})\
-[강화학습의 혈관 속 탐험 (2) - 강화학습과 제어 이론의 비교]({{< ref "2019-10-25-adventure_of_rl_in_vessel_2.md" >}})
+[강화학습의 혈관 속 탐험 (2) - 강화학습과 제어 이론의 비교]({{< ref "2019-11-26-adventure_of_rl_in_vessel_2.md" >}})
 
 ## Intro
 ---
