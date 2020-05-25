@@ -90,13 +90,13 @@ PCI 시술에서 시술자가 환자의 혈관 모양과 현재 가이드와이�
 - **경험 (Experience)**: 강화학습 알고리즘을 학습하기 위해서는 환경과 상호작용해서 얻은 상태와 행동, 보상 등의 경험(experience)을 얻어야 합니다. 이러한 경험들이 강화학습에서의 데이터라고 할 수 있습니다. 
 
 
-**On-policy**는 학습하는 policy과 행동하는 policy가 같은 알고리즘을 말합니다. 즉, On-policy는 현재 학습하는 policy를 통해서 얻은 경험만을 이용해 학습할 수 있습니다. 다른 policy가 얻은 경험 뿐만 아니라 과거의 policy로 얻은 경험 또한 사용할 수 없습니다. 예를 들어 on-policy 알고리즘은 에이전트가 첫 번째 episode에서 얻은 경험들을 10 번째 episode까지 학습한 에이전트가 사용하여 학습할 수 없습니다. 10 번째 episode까지 학습한 에이전트와 아무 것도 학습하지 않은 첫 번째 episode때의 에이전트의 policy는 다르기 때문입니다. **Off-policy**는 이와 반대로 학습하는 policy와 행동하는 policy가 다른 알고리즘을 말합니다. 현재 학습하고 있는 에이전트가 과거에 모았던 경험 뿐만 아니라 지금 학습하고 있는 에이전트와 완전히 다른 에이전트가 만든 경험들까지도 학습에 사용할 수 있습니다.
+**On-policy**는 학습하는 policy와 행동하는 policy가 같은 알고리즘을 말합니다. 즉, On-policy는 현재 학습하는 policy를 통해서 얻은 경험만을 이용해 학습할 수 있습니다. 다른 policy가 얻은 경험 뿐만 아니라 과거의 policy로 얻은 경험 또한 사용할 수 없습니다. 예를 들어 on-policy 알고리즘에서는 에이전트가 첫 번째 episode에서 얻은 경험들을 10 번째 episode까지 학습한 에이전트가 사용하여 학습할 수 없습니다. 10 번째 episode까지 학습한 에이전트와 아무 것도 학습하지 않은 첫 번째 episode때의 에이전트의 policy는 다르기 때문입니다. **Off-policy**는 이와 반대로 학습하는 policy와 행동하는 policy가 다른 알고리즘을 말합니다. 현재 학습하고 있는 에이전트가 과거에 모았던 경험 뿐만 아니라 지금 학습하고 있는 에이전트와 완전히 다른 에이전트가 만든 경험들까지도 학습에 사용할 수 있습니다.
 
-Deep learning을 사용하는 강화학습 알고리즘에서 on-policy와 off-policy는 **experience replay**의 사용 여부로 판단할 수 있습니다. Experience replay는 환경을 통해 얻은 경험들을 버퍼에 쌓고 batch 단위로 샘플링하여 학습하기 때문에 off-policy 방법이라고 할 수 있습니다. 딥 강화학습에서 on-policy는 대표적으로 **TRPO, PPO**가 있으며 off-policy는 **DQN, DDPG**이 있습니다 [[2](#ref_2), [3](#ref_3), [4](#ref_4), [5](#ref_5)]. 아래 이미지는 experience replay을 사용하는 off-policy 알고리즘의 학습 사이클을 설명합니다.
+Deep learning을 사용하는 강화학습 알고리즘에서 on-policy와 off-policy는 **experience replay**의 사용 여부로 판단할 수 있습니다. Experience replay는 환경을 통해 얻은 경험들을 버퍼에 쌓고 batch 단위로 샘플링하여 학습하기 때문에 off-policy 방법이라고 할 수 있습니다. 딥 강화학습에서 on-policy는 대표적으로 **TRPO, PPO**가 있으며 off-policy는 **DQN, DDPG**이 있습니다 [[2](#ref_2), [3](#ref_3), [4](#ref_4), [5](#ref_5)]. 아래 이미지는 experience replay를 사용하는 off-policy 알고리즘의 학습 사이클을 설명합니다.
 
 <center><img src="https://user-images.githubusercontent.com/17582508/82730269-64ea6100-9d39-11ea-86ee-7abaf7c25ab7.png" width="80%"></center>
 
-PPO와 같은 On-policy 알고리즘은 이전 경험을 사용할 수 없기 때문에 현재 데이터를 많이 모으기 위해서 주로 환경을 분산처리시키는 방법을 사용합니다. 그렇지 않으면 과거의 데이터를 사용할 수 없기 때문에 off-policy와 학습 속도에서 차이가 나게 됩니다. 하지만 저희가 구축한 환경은 가상 시뮬레이션 환경이 아닌 real world 환경이기 때문에 분산처리 환경을 구축하기가 어렵습니다. 4개의 환경을 분산처리 하려면 4개의 로봇과 혈관 모형, 카메라 세트가 필요하기 때문이죠. 따라서 저희는 **real world 환경에서는 off-policy 알고리즘이 적합**하다고 생각하였습니다.
+PPO와 같은 On-policy 알고리즘은 이전 경험을 사용할 수 없기 때문에 현재 데이터를 많이 모으기 위해서 주로 환경을 분산처리시키는 방법을 사용합니다. 그렇지 않으면 과거의 데이터를 사용할 수 없기 때문에 off-policy와 학습 속도에서 차이가 나게 됩니다. 하지만 저희가 구축한 환경은 가상 시뮬레이션 환경이 아닌 real world 환경이기 때문에 분산처리 환경을 구축하기가 어렵습니다. 4개의 환경을 분산처리 하려면 4개의 로봇과 혈관 모형, 카메라 세트가 필요하기 때문이죠. 이러한 이유로 저희는 **real world 환경에서는 off-policy 알고리즘이 적합**하다고 생각하였습니다.
 
 <a id="ref_16"></a>
 
@@ -124,13 +124,13 @@ Off-policy 알고리즘은 현재 학습하고 있는 에이전트가 모은 경
 #### Continuous action
 - Continuous action은 실수 값을 가지며 값의 크기를 표현할 수 있습니다.
 
-  - 예를 들어, [전후진, 회전] 이라는 행동이 있을 때 [0.3, 0.4]와 같이 전진, 회전 행동을 선택합니다.
+  - 예를 들어, [전/후진, 회전] 이라는 행동이 있을 때 [0.3, 0.4]과 같이 전/후진, 회전 값을 실수 값으로 지정할 수 있습니다.
 - 행동 값의 범위가 무한하기 때문에 action space의 크기가 큽니다.
 - 주로 Policy gradient와 같은 policy-based 알고리즘이 사용됩니다.
 
 <center><img src="https://user-images.githubusercontent.com/17582508/82730482-1211a900-9d3b-11ea-9000-2996108c0f6a.png" width="80%"></center>
 
-저희가 구성한 혈관 모형 환경은 두 가지 action space 중에 선택해야 했습니다. action space를 결정하기 위해 저희가 고려한 사항은 다음과 같습니다.
+저희가 구성한 혈관 모형 환경은 두 가지 action space 중에 선택해야 했습니다. Action space를 결정하기 위해 저희가 고려한 사항은 다음과 같습니다.
 
 - PCI 로봇의 동작: 기계 구조상 전진과 회전 동작을 동시에 조작할 경우 가이드와이어가 이탈하거나 꼬일 위험이 있음.
 - human demo 제작의 용이성: 키보드 입력으로 손쉽게 human demo의 생성이 가능해야함.
@@ -144,11 +144,13 @@ Off-policy 알고리즘은 현재 학습하고 있는 에이전트가 모은 경
 
 ## 학습 결과
 ---
-저희가 혈관 모형 환경을 구성한 환경과 에이전트의 최종 목표는 **로봇으로 가이드와이어를 제어하여 원하는 위치까지 이동시키는 것**이었습니다. 이를 학습시키기 위해 상태 이미지를 다양한 컴퓨터 비전 기술을 이용해 전처리하였습니다. 그리고 목표(goal)을 상태 이미지에 표시해주어 에이전트가 목표를 명확하게 알 수 있도록 해주었습니다.
+저희가 혈관 모형 환경을 구성한 환경과 에이전트의 최종 목표는 **로봇으로 가이드와이어를 제어하여 원하는 위치까지 이동시키는 것**이었습니다. 이를 학습시키기 위해 상태 이미지를 다양한 컴퓨터 비전 기술을 이용해 전처리하였습니다. 그리고 목표(goal)를 상태 이미지에 표시해주어 에이전트가 목표를 명확하게 알 수 있도록 해주었습니다.
 
 <center><img src="https://user-images.githubusercontent.com/17582508/82729410-56e51200-9d32-11ea-8f97-e99d44dd4f17.png" width="80%"></center>
 
 이렇게 구성한 환경에서 선정한 RainbowfD 알고리즘을 통해 학습시킨 결과 가이드와이어를 원하는 위치까지 성공적으로 제어하였습니다! 학습 결과는 아래 영상을 통해 확인할 수 있습니다.
+
+> 아래 영상은 TCT 2019 학회의 포스터 세션에서 발표한 영상입니다 [[10]](#ref_10).
 
 <center><iframe width="640" height="480"
 src="https://www.youtube.com/embed/1imlCMfr4mI" 
@@ -184,3 +186,5 @@ allowfullscreen></iframe></center>
 **[8]** Behavior Cloning: [A. Nair et al., "Overcoming Exploration in Reinforcement Learning with Demonstrations." arXiv preprint arXiv:1709.10089, 2017.](https://arxiv.org/pdf/1709.10089.pdf) \
 <a id="ref_9"></a>
 **[9]** Rainbow: [M. Hessel et al., "Rainbow: Combining Improvements in Deep Reinforcement Learning." arXiv preprint arXiv:1710.02298, 2017.](https://arxiv.org/pdf/1710.02298.pdf) \
+<a id="ref_10"></a>
+**[10]** TCT 2019 Reinforcement learning for guidewire navigation in coronary phantom 포스터 자료: https://www.tctmd.com/slide/reinforcement-learning-guidewire-navigation-coronary-phantom \
