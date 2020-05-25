@@ -81,8 +81,11 @@ PCI 시술에서 시술자가 환자의 혈관 모양과 현재 가이드와이�
 ---
 **On-policy**와 **Off-policy**는 강화학습에서 많이 언급되는 내용 중 하나입니다. 이 두 가지 개념을 이해하려면 몇 가지 강화학습의 개념들을 알아야합니다.
 
-- **정책 (Policy)**: 강화학습에서 정책은 **어떤 상태에서 어떤 행동을 할 확률**을 말합니다. 강화학습은 상태에 대해서 보상을 최대로 하는 행동을 선택하도록 학습합니다. 이를 정책이라는 용어로 다시 써보면 모든 상태에 대해서 보상을 최대로 하는 행동을 가장 높은 확률로 하는 정책을 갖도록 학습한다고 할 수 있습니다. 아래 이미지에서 정책의 예시를 표현하였습니다. 각 상황에서 캐릭터가 죽지 않으려면 점프하는 행동이 가장 확률이 높아야하며 이러한 확률을 정책이라고 합니다.
+- **정책 (Policy)**: 강화학습에서 정책은 **어떤 상태에서 어떤 행동을 할 확률**을 말합니다. 정책은 단순한 확률이지만 학습을 통해 우리가 원하는 더 좋은 정책으로 만들 수 있습니다. 우리가 원하는 최적의 정책은 모든 상태에서 누적 보상을 최대로 하는 행동이 가장 높은 확률을 가지는 것입니다. 아래 이미지에서 정책의 예시를 표현하였습니다. 각 네모칸이 상태이고 회색 네모칸이 보상을 받는 상태라고 한다면 $\pi_4$가 최적의 정책이라 할 수 있습니다.
 
+<center><img src="https://user-images.githubusercontent.com/17582508/82799886-b91a5000-9eb5-11ea-9ef8-3b01a4508b21.png" width="80%"></center>
+
+아래 이미지에서 정책의 다른 예시를 보여줍니다. 각 상황에서 캐릭터가 죽지 않으려면 점프하는 행동이 가장 확률이 높아야합니다.
 <center><img src="https://user-images.githubusercontent.com/17582508/82730167-b9411100-9d38-11ea-82f8-11c2793502ce.png" width="80%"></center>
 
 > 이 아래부터는 정책이라는 단어보다 policy라는 단어를 사용하도록 하겠습니다.
@@ -92,7 +95,7 @@ PCI 시술에서 시술자가 환자의 혈관 모양과 현재 가이드와이�
 
 **On-policy**는 학습하는 policy와 행동하는 policy가 같은 알고리즘을 말합니다. 즉, On-policy는 현재 학습하는 policy를 통해서 얻은 경험만을 이용해 학습할 수 있습니다. 다른 policy가 얻은 경험 뿐만 아니라 과거의 policy로 얻은 경험 또한 사용할 수 없습니다. 예를 들어 on-policy 알고리즘에서는 에이전트가 첫 번째 episode에서 얻은 경험들을 10 번째 episode까지 학습한 에이전트가 사용하여 학습할 수 없습니다. 10 번째 episode까지 학습한 에이전트와 아무 것도 학습하지 않은 첫 번째 episode때의 에이전트의 policy는 다르기 때문입니다. **Off-policy**는 이와 반대로 학습하는 policy와 행동하는 policy가 다른 알고리즘을 말합니다. 현재 학습하고 있는 에이전트가 과거에 모았던 경험 뿐만 아니라 지금 학습하고 있는 에이전트와 완전히 다른 에이전트가 만든 경험들까지도 학습에 사용할 수 있습니다.
 
-Deep learning을 사용하는 강화학습 알고리즘에서 on-policy와 off-policy는 **experience replay**의 사용 여부로 판단할 수 있습니다. Experience replay는 환경을 통해 얻은 경험들을 버퍼에 쌓고 batch 단위로 샘플링하여 학습하기 때문에 off-policy 방법이라고 할 수 있습니다. 딥 강화학습에서 on-policy는 대표적으로 **TRPO, PPO**가 있으며 off-policy는 **DQN, DDPG**이 있습니다 [[2](#ref_2), [3](#ref_3), [4](#ref_4), [5](#ref_5)]. 아래 이미지는 experience replay를 사용하는 off-policy 알고리즘의 학습 사이클을 설명합니다.
+딥 강화학습 알고리즘에서 on-policy와 off-policy는 **experience replay**의 사용 여부로 판단할 수 있습니다. Experience replay는 환경을 통해 얻은 경험들을 버퍼에 쌓고 batch 단위로 샘플링하여 학습하기 때문에 off-policy 방법이라고 할 수 있습니다. 딥 강화학습에서 on-policy는 대표적으로 **TRPO [[2]](#ref_2), PPO [[3]](#ref_3)**가 있으며 off-policy는 **DQN [[4]](#ref_4), DDPG [[5]](#ref_5)**가 있습니다. 아래 이미지는 experience replay를 사용하는 off-policy 알고리즘의 학습 사이클을 설명합니다.
 
 <center><img src="https://user-images.githubusercontent.com/17582508/82730269-64ea6100-9d39-11ea-86ee-7abaf7c25ab7.png" width="80%"></center>
 
@@ -114,23 +117,20 @@ Off-policy 알고리즘은 현재 학습하고 있는 에이전트가 모은 경
 
 #### Discrete action
 - Discrete 하게 결정되는 행동을 말합니다. 즉, 중간 값이 없고 0 또는 1의 값을 갖습니다.
-  
   - 예를 들어, [전진, 후진, 회전] 이라는 행동이 있을 때 전진 행동은 [1, 0, 0]과 같이 선택합니다.
 - 중간 값은 없으며 Discrete action으로 다양한 행동을 표현하려면 행동의 개수를 늘려야합니다.
-
   - 예시: [전진 1cm, 전진 2cm, 후진 1cm, 후진 2cm, 회전]
-- 주로 Q learning과 같은 value-based 알고리즘이 사용됩니다.
+- 주로 Q learning과 같은 value-based 알고리즘으로 학습합니다.
 
 #### Continuous action
 - Continuous action은 실수 값을 가지며 값의 크기를 표현할 수 있습니다.
-
   - 예를 들어, [전/후진, 회전] 이라는 행동이 있을 때 [0.3, 0.4]과 같이 전/후진, 회전 값을 실수 값으로 지정할 수 있습니다.
 - 행동 값의 범위가 무한하기 때문에 action space의 크기가 큽니다.
-- 주로 Policy gradient와 같은 policy-based 알고리즘이 사용됩니다.
+- 주로 Policy gradient와 같은 policy-based 알고리즘으로 학습합니다.
 
 <center><img src="https://user-images.githubusercontent.com/17582508/82730482-1211a900-9d3b-11ea-9000-2996108c0f6a.png" width="80%"></center>
 
-저희가 구성한 혈관 모형 환경은 두 가지 action space 중에 선택해야 했습니다. Action space를 결정하기 위해 저희가 고려한 사항은 다음과 같습니다.
+저희가 구성한 혈관 모형 환경에서 action space를 결정하기 위해 저희가 고려한 사항은 다음과 같습니다.
 
 - PCI 로봇의 동작: 기계 구조상 전진과 회전 동작을 동시에 조작할 경우 가이드와이어가 이탈하거나 꼬일 위험이 있음.
 - human demo 제작의 용이성: 키보드 입력으로 손쉽게 human demo의 생성이 가능해야함.
