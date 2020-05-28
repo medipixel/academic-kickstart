@@ -6,13 +6,17 @@ echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 git submodule update
 git submodule update --remote
 
-# Build the project.
-hugo # if using a theme, replace with `hugo -t <YOURTHEME>`
-
-# Go To Public folder
+# Go to Public folder
 cd public
 # Add changes to git.
 git checkout master
+cd ..
+
+# Build the project.
+hugo # if using a theme, replace with `hugo -t <YOURTHEME>`
+
+# Go to Public folder and Add changes
+cd public
 git add .
 
 # Commit changes.
