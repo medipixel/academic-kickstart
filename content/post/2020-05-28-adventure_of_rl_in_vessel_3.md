@@ -1,7 +1,7 @@
 +++
 title = "강화학습의 혈관 속 탐험 (3) - 실험환경 구성과 강화학습 알고리즘 소개"
 summary = "Introduction to guide-wire control for PCI by RL (3) - How to apply RL"
-date = 2020-05-23T10:00:00+09:00
+date = 2020-05-28T10:00:00+09:00
 draft = false
 authors=["kyunghwan-kim"]
 # Tags and categories
@@ -24,7 +24,7 @@ categories = []
 #### 강화학습의 혈관 속 탐험 시리즈 \
 [강화학습의 혈관 속 탐험 (1) - 로봇과 심혈관 중재 시술]({{< ref "2019-10-25-adventure_of_rl_in_vessel_1.md" >}}) \
 [강화학습의 혈관 속 탐험 (2) - 강화학습과 제어 이론의 비교]({{< ref "2019-11-26-adventure_of_rl_in_vessel_2.md" >}}) \
-[강화학습의 혈관 속 탐험 (3) - 실험환경 구성과 강화학습 알고리즘 소개]({{< ref "2020-05-23-adventure_of_rl_in_vessel_3.md" >}})
+[강화학습의 혈관 속 탐험 (3) - 실험환경 구성과 강화학습 알고리즘 소개]({{< ref "2020-05-28-adventure_of_rl_in_vessel_3.md" >}})
 
 ## Intro
 ---
