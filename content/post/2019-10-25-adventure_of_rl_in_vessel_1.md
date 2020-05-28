@@ -22,7 +22,8 @@ categories = []
 +++
 #### 강화학습의 혈관 속 탐험 시리즈 \
 [강화학습의 혈관 속 탐험 (1) - 로봇과 심혈관 중재 시술]({{< ref "2019-10-25-adventure_of_rl_in_vessel_1.md" >}})\
-[강화학습의 혈관 속 탐험 (2) - 강화학습과 제어 이론의 비교]({{< ref "2019-11-26-adventure_of_rl_in_vessel_2.md" >}})
+[강화학습의 혈관 속 탐험 (2) - 강화학습과 제어 이론의 비교]({{< ref "2019-11-26-adventure_of_rl_in_vessel_2.md" >}}) \
+[강화학습의 혈관 속 탐험 (3) - 실험환경 구성과 강화학습 알고리즘 소개]({{< ref "2020-05-28-adventure_of_rl_in_vessel_3.md" >}})
 
 
 ## Intro
@@ -99,33 +100,25 @@ PCI는 허혈성 심장 질환을 효과적으로 치료할 수 있는 시술 �
 
 ## 마치며
 ---
-이번 포스트에서는 심혈관 중재시술과 저희가 진행하고 있는 연구 주제인 심혈관 중재시술 자동화의 필요성에 대해 설명드렸습니다. 다음 포스트에서는 PCI를 자동화하는 방법으로 인공지능 기법 중  강화학습을 선택한 이유에 대해서 포스팅하도록 하겠습니다.
+이번 포스트에서는 심혈관 중재시술과 저희가 진행하고 있는 연구 주제인 심혈관 중재시술 자동화의 필요성에 대해 설명드렸습니다. 다음 포스트에서는 PCI를 자동화하는 방법으로 인공지능 기법 중 강화학습을 선택한 이유에 대해서 포스팅하도록 하겠습니다.
 
 ## Reference
 ---
 <a id="ref_1"></a>
-**[1]** 심장 이미지 (wiki): https://ko.wikipedia.org/wiki/%EA%B4%80%EC%83%81%EB%8F%99%EB%A7%A5
-
+**[1]** 심장 이미지 (wiki): https://ko.wikipedia.org/wiki/%EA%B4%80%EC%83%81%EB%8F%99%EB%A7%A5 \
 <a id="ref_2"></a>
-**[2]** 허혈성 심질환 설명(서울아산병원): http://www.amc.seoul.kr/asan/healthinfo/disease/diseaseDetail.do?contentId=30275
-
+**[2]** 허혈성 심질환 설명(서울아산병원): http://www.amc.seoul.kr/asan/healthinfo/disease/diseaseDetail.do?contentId=30275 \
 <a id="ref_3"></a>
-**[3]** 연도별 국내 사망 원인 통계(e-나라지표), 세계 사망 원인(WHO): http://www.index.go.kr/potal/stts/idxMain/selectPoSttsIdxMainPrint.do?idx_cd=1012&board_cd=INDX_001, https://www.who.int/news-room/fact-sheets/detail/the-top-10-causes-of-death
-
+**[3]** 연도별 국내 사망 원인 통계(e-나라지표), 세계 사망 원인(WHO): http://www.index.go.kr/potal/stts/idxMain/selectPoSttsIdxMainPrint.do?idx_cd=1012&board_cd=INDX_001, https://www.who.int/news-room/fact-sheets/detail/the-top-10-causes-of-death \
 <a id="ref_4"></a>
-**[4]** 심혈관질환의 종류 이미지(아스피린프로텍트): http://www.aspirinprotect.co.kr/ko/disease-and-prevention/cardiovascular-diseases/#tab_tab0
-
+**[4]** 심혈관질환의 종류 이미지(아스피린프로텍트): http://www.aspirinprotect.co.kr/ko/disease-and-prevention/cardiovascular-diseases/#tab_tab0 \
 <a id="ref_5"></a>
-**[5]** 관상동맥 중재시술의 이해(서울아산병원 심장병원): http://heart.amc.seoul.kr/asan/depts/heart/K/bbsDetail.do?menuId=4634&contentId=264501
-
+**[5]** 관상동맥 중재시술의 이해(서울아산병원 심장병원): http://heart.amc.seoul.kr/asan/depts/heart/K/bbsDetail.do?menuId=4634&contentId=264501 \
 <a id="ref_6"></a>
-**[6]** 사람 몸과 혈관 이미지: http://www.secondscount.org/image.axd?id=c8a00122-bb66-46c6-8ab7-333a9a0cd46a&t=635566481777430000, https://www.mcvs.co.nz/wp-content/uploads/2017/05/stent-balloon-angioplasty.png
-
+**[6]** 사람 몸과 혈관 이미지: http://www.secondscount.org/image.axd?id=c8a00122-bb66-46c6-8ab7-333a9a0cd46a&t=635566481777430000, https://www.mcvs.co.nz/wp-content/uploads/2017/05/stent-balloon-angioplasty.png \
 <a id="ref_7"></a>
-**[7]** 관상동맥 조영술 이미지 (강남세브란스병원): http://gs.iseverance.com/dept_clinic/department/cardiology/treatment/view.asp?con_no=82261
-
+**[7]** 관상동맥 조영술 이미지 (강남세브란스병원): http://gs.iseverance.com/dept_clinic/department/cardiology/treatment/view.asp?con_no=82261 \
 <a id="ref_8"></a>
-**[8]** Corindus: https://www.corindus.com/
-
+**[8]** Corindus: https://www.corindus.com/ \
 <a id="ref_9"></a>
-**[9]** 수기 시술과 로봇 이미지: 아산메디컬센터
+**[9]** 수기 시술과 로봇 이미지: 아산메디컬센터 \
