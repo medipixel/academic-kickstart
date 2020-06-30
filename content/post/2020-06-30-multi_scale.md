@@ -2,7 +2,7 @@
 +++
 title = "[Tutorial] Multi-scale"
 summary = "Handling multi-scale images using OpenCV"
-date = 2019-12-16T13:00:00+09:00
+date = 2020-06-30T10:20:00+09:00
 draft = false
 authors=["young-kim", "whi-kwon"]
 # Tags and categories

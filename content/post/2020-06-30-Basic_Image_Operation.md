@@ -2,7 +2,7 @@
 +++
 title = "[Tutorial] Basic Image Operation"
 summary = "Image Operations using OpenCV"
-date = 2019-12-16T12:00:00+09:00
+date = 2020-06-30T10:00:00+09:00
 draft = false
 authors=["young-kim", "whi-kwon"]
 # Tags and categories
